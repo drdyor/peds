@@ -69,3 +69,25 @@ forks is a log nobody reads.
 - ran `vercel deploy --prod --cwd "C:/Users/Forre/peds" --yes 2>&1 | grep -E "Production|Error" | head -2` — Deploy to production
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live production
 - edited `project_peds_flashcards_vercel_2026-08-16.md` — `C:\Users\Forre\.claude\projects\C--Users-Forre\memory\project_peds_flashcards_vercel_2026-08-16.md`
+- ran `python - <<'PY' import sys,json,csv,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f…` — Compare card 7 explanation with the doctors' explanation
+- ran `python - <<'PY' import sys,json,csv,re,difflib,statistics sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Use…` — Measure doctors-explanation coverage vs deck
+- ran `python - <<'PY' import sys,json,csv,re,difflib sys.stdout.reconfigure(encoding="utf-8") s=open(r"C:\Users\Forre\peds\client\src\lib\cards.ts",encoding…` — Generate doctors' explanations data file
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").read…` — Wire doctors note UI and invalid-card TTS
+- ran `cd "C:/Users/Forre/peds" && sed -n '426,434p' client/src/pages/Home.tsx | cat -A | sed 's/\$$//' | cut -c1-200` — Inspect the failing lines
+- edited `Home.tsx` — `C:\Users\Forre\peds\client\src\pages\Home.tsx`
+- ran `cd "C:/Users/Forre/peds" && grep -n 'split(/\\\\s\*(?:Explanation' client/src/pages/Home.tsx | head -2; sed -n '/function speakableAnswer/,/^}/p' clie…` — Check speakableAnswer escapes survived
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1 | head -5; echo "[tsc clean if empty]"; npx vite build 2>&1 | grep -E "built in|error"; npx vitest r…` — Type-check, build and test
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4176 --bind 127.0.0.1` — Serve build for verification
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_note.js" <<'JS' …` — Verify doctors note renders and TTS on card 2
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/check_note.js" http://localhost:…` — Verify invalid card 5 reads its teaching
+- ran `python - <<'PY' import sys,io sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" lines=open(p,encoding="utf-8…` — Rewrite speech normalisation and rebuild
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" lines=open(p,encoding="utf-8").…` — Apply fix, rebuild and re-test invalid card speech
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").read…` — Polish speech phrasing and verify both card types
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/check_note.js" http://localhost:…` — Re-render card 2 with expanded note
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").read…` — Scroll doctors note into view on open
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/check_note.js" http://localhost:…` — Re-render expanded doctors note
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_scroll.js" <<'JS' const p…` — Measure whether the note scrolls into view
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Add the doctors' explanations; re…` — Commit and deploy doctors explanations
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live production
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\.claude\projects\C--Users-Forre\memory\project_peds_flashcards_…` — Record explanation source findings in memory
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys,json,re;sys.stdout.reconfigure(encoding='utf-8') o=open(r'client/src/lib/explanations.ts',encoding=…` — Verify doctor-note counts and live bundle

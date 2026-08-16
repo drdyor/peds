@@ -4,6 +4,7 @@ import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, 
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
+import { playCue } from "@/lib/sounds";
 
 type Rating = "hard" | "easy";
 type ValidationState = "verified" | "needs-review" | "rejected";
@@ -218,25 +219,9 @@ export default function Home() {
 
   function giveFeedback(kind: "reveal" | "easy" | "hard") {
     if (feedback.haptics && "vibrate" in navigator) navigator.vibrate(kind === "reveal" ? 8 : kind === "easy" ? [12, 35, 12] : [20, 35, 20]);
-    if (!feedback.sound) return;
-    const AudioContextClass = window.AudioContext || (window as typeof window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
-    if (!AudioContextClass) return;
-    const audio = new AudioContextClass();
-    const oscillator = audio.createOscillator();
-    const gain = audio.createGain();
-    const now = audio.currentTime;
-    const frequency = kind === "easy" ? 660 : kind === "hard" ? 220 : 420;
-    oscillator.type = kind === "hard" ? "triangle" : "sine";
-    oscillator.frequency.setValueAtTime(frequency, now);
-    oscillator.frequency.exponentialRampToValueAtTime(kind === "easy" ? 880 : frequency * .88, now + .12);
-    gain.gain.setValueAtTime(.0001, now);
-    gain.gain.exponentialRampToValueAtTime(.045, now + .015);
-    gain.gain.exponentialRampToValueAtTime(.0001, now + .16);
-    oscillator.connect(gain).connect(audio.destination);
-    oscillator.start(now);
-    oscillator.stop(now + .18);
-    window.setTimeout(() => void audio.close(), 260);
+    if (feedback.sound) playCue(kind);
   }
+
 
   function speakAnswer(text: string) {
     if (!speechSupported) return;
@@ -374,7 +359,8 @@ export default function Home() {
           <div className="shortcut-row"><Command size={15} /><span>Space to reveal</span></div>
           <div className="shortcut-row"><span className="verify-mark">*</span><span>verify against current guidance</span></div>
           <div className="shortcut-row"><span className="keycap">H</span><span>Hard</span><span className="keycap">E</span><span>Easy</span></div>
-          <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield reading (2026)</a>
+          <a className="reading-link" href="lek-last-minute-pediatria.pdf" target="_blank" rel="noreferrer"><BookOpen size={14} /> LEK Last Minute — Pediatria <small>371 pp</small></a>
+          <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield addendum 2026 <small>17 pp</small></a>
           <button className="reset-button" onClick={resetProgress}><RotateCcw size={14} /> Reset progress</button>
         </div>
       </aside>
