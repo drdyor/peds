@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, FileText, ListChecks, ListFilter, RotateCcw, Sparkles, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
-import { cardOptions } from "@/lib/options";
+import { cardQuestions } from "@/lib/options";
 
 type Rating = "hard" | "easy";
 type ValidationState = "verified" | "needs-review" | "rejected";
@@ -46,6 +46,28 @@ function loadFeedback() {
 const DANGLING_TABLE_REF = /\s*The (?:table\/true-set|true-set|table) above shows what remains correct\.?/gi;
 function answerText(card: Flashcard, hasOptions: boolean) {
   return hasOptions ? card.back.replace(DANGLING_TABLE_REF, "").trim() : card.back;
+}
+
+// Stems and options often pack an enumerated list onto one line ("1) x; 2) y; 3) z"),
+// which reads as a wall of text. Split those onto their own lines. The lead-in keeps the
+// editorial display face; the enumerated items drop to body type so a 5-item stem does not
+// fill the whole card.
+function splitEnumerated(text: string) {
+  const parts = text.split(/\s+(?=\d\)\s)/);
+  return parts.length >= 3 ? { lead: parts[0], items: parts.slice(1) } : { lead: text, items: [] as string[] };
+}
+
+function EnumeratedText({ text }: { text: string }) {
+  const { lead, items } = splitEnumerated(text);
+  if (!items.length) return <>{text}</>;
+  return (
+    <>
+      {lead}
+      {items.map((item) => (
+        <span className="enum-item" key={item}>{item}</span>
+      ))}
+    </>
+  );
 }
 
 function statusLabel(card: Flashcard, state?: ValidationState) {
@@ -128,6 +150,9 @@ export default function Home() {
       const node = cardBodyRef.current;
       if (node) setOverflowing(node.scrollHeight > node.clientHeight + 1);
     };
+    // Always start a card at its question — revealing must never leave the stem scrolled
+    // off the top of the card.
+    if (cardBodyRef.current) cardBodyRef.current.scrollTop = 0;
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
@@ -174,7 +199,7 @@ export default function Home() {
 
   const card = deck[index] ?? flashcards[0];
   const palette = PALETTES[card.id % PALETTES.length];
-  const options = cardOptions[card.id];
+  const question = cardQuestions[card.id];
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
 
@@ -279,16 +304,21 @@ export default function Home() {
             <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span><span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
             <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
-              <p className="card-question">{card.front}</p>
-              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue</div><p>{answerText(card, Boolean(options))}</p></div>{options && <div className="option-table">
-                <div className="prompt-label option-table-label"><ListChecks size={16} /> Every option, from your audited master</div>
-                {options.map((option) => (
-                  <div key={option.letter} className={`option-row ${option.correct ? "is-true" : "is-false"}`}>
-                    <span className="option-letter">{option.letter}</span>
-                    <span className="option-text">{option.text}</span>
-                    <span className="option-status">{option.correct ? "TRUE" : "FALSE / EXCLUDED"}</span>
-                  </div>
-                ))}
+              <p className={`card-question ${splitEnumerated(card.front).items.length ? "has-enum" : ""}`}><EnumeratedText text={card.front} /></p>
+              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue</div><p>{answerText(card, Boolean(question))}</p></div>{question && <div className="option-table">
+                <div className="prompt-label option-table-label"><ListChecks size={16} /> {question.keyed === null ? "All five options — legacy key withdrawn, nothing highlighted" : question.negative ? "Every option — the excluded one is the answer" : "Every option, as printed on the exam paper"}</div>
+                {question.options.map((option) => {
+                  const isKeyed = option.letter === question.keyed;
+                  const tone = question.keyed === null ? "is-neutral" : isKeyed ? (question.negative ? "is-false" : "is-answer") : question.negative ? "is-true" : "is-neutral";
+                  const label = question.keyed === null ? "" : isKeyed ? (question.negative ? "FALSE / EXCLUDED" : "ANSWER") : question.negative ? "TRUE" : "";
+                  return (
+                    <div key={option.letter} className={`option-row ${tone}`}>
+                      <span className="option-letter">{option.letter}</span>
+                      <span className="option-text"><EnumeratedText text={option.text} /></span>
+                      {label && <span className="option-status">{label}</span>}
+                    </div>
+                  );
+                })}
               </div>}</>}
             </div>
             <div className="card-footer"><span>{revealed ? "Answer revealed · nice work" : "Recall first, then reveal"}</span><span className="card-corner"><Sparkles size={17} /></span></div>

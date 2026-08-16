@@ -109,7 +109,11 @@ button { font: inherit; }
 .validation-button:disabled { opacity: .4; cursor: not-allowed; }
 .caveat\/updated { color: #866a1d; background: #fbf0c9; }
 .invalid\/outdated { color: #a04d46; background: #f9ddd7; }
-.card-body { flex: 1; padding: 40px 6%; display: flex; flex-direction: column; justify-content: center; }
+.card-body { flex: 1; padding: 40px 6%; display: flex; flex-direction: column; justify-content: flex-start; }
+/* Centre short cards with auto margins, NOT justify-content:center — on an overflowing
+   scroll container centring clips the top of the question and makes it unreachable. */
+.card-body > :first-child { margin-top: auto; }
+.card-body > :last-child { margin-bottom: auto; }
 .prompt-label { display: inline-flex; align-items: center; gap: 7px; color: #8990a0; }
 .card-question { margin: 17px 0 20px; max-width: 900px; font-family: Fraunces, Georgia, serif; font-size: clamp(25px, 2.5vw, 38px); line-height: 1.17; letter-spacing: -.025em; color: #18254b; }
 .reveal-prompt { display: flex; align-items: center; gap: 8px; color: #9c9a9a; font-size: 12px; margin-top: 15px; }
@@ -197,6 +201,8 @@ button { font: inherit; }
 .option-table-label { color: #8990a0; margin-bottom: 2px; }
 .option-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: baseline; gap: 11px; padding: 9px 13px; border-radius: 9px; border: 1px solid transparent; font-size: clamp(15px, .98vw, 16.5px); line-height: 1.4; }
 .option-row.is-true { background: #eef7f1; border-color: #cfe6d8; color: #2f5c44; }
+.option-row.is-answer { background: #eef7f1; border-color: #b9dcc8; color: #24614a; font-weight: 600; }
+.option-row.is-neutral { background: rgba(255,250,240,.6); border-color: #e6dece; color: #5b6076; }
 .option-row.is-false { background: #fdeeec; border-color: #f2ccc6; color: #9c3327; font-weight: 600; }
 .option-letter { font-weight: 800; font-size: 12px; letter-spacing: .08em; opacity: .75; }
 .option-status { font-size: 10px; font-weight: 800; letter-spacing: .1em; white-space: nowrap; opacity: .8; }
@@ -221,3 +227,11 @@ button { font: inherit; }
 /* Link to the rewritten high-yield reading PDF (shipped with the app, not hosted off-site). */
 .reading-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; color: #1647e8; font-size: 11px; font-weight: 700; text-decoration: none; }
 .reading-link:hover { text-decoration: underline; }
+
+/* Enumerated sub-items ("1) ... 2) ...") on their own lines — packed onto one line they are
+   unreadable, which is exactly how question 5 arrived. */
+.enum-item { display: block; margin-top: 5px; }
+/* A stem carrying an enumerated list: lead-in stays editorial, the items become readable
+   body type. Without this a five-item stem renders five display-size paragraphs. */
+.card-question.has-enum { font-size: clamp(21px, 1.75vw, 27px); line-height: 1.2; }
+.card-question.has-enum .enum-item { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; font-size: clamp(15px, 1.05vw, 17px); font-weight: 400; letter-spacing: 0; line-height: 1.45; margin-top: 7px; color: #3a4260; }
