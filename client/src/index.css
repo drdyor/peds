@@ -245,3 +245,16 @@ button { font: inherit; }
 /* The repeated verify-this warning, collapsed to one marker + a single footnote. */
 .verify-mark { color: var(--card-accent); font-weight: 800; margin-left: 2px; cursor: help; }
 /* .verify-footnote retired: the note is stated once in the rail, not on every card. */
+
+/* Doctors' explanation — long-form teaching, collapsed by default so it never crowds the
+   quick memory cue. Source and consensus are always shown with it. */
+.doctor-note { margin-top: 14px; border-top: 1px dashed #e0d8c8; padding-top: 12px; }
+.doctor-note-toggle { display: flex; align-items: center; gap: 8px; width: 100%; padding: 6px 2px; border: 0; background: transparent; color: #4b5570; font-size: 12px; font-weight: 800; letter-spacing: .04em; text-align: left; }
+.doctor-note-toggle:hover { color: #1647e8; }
+.doctor-note-chevron { transition: transform 160ms ease-out; flex: none; }
+.doctor-note.is-open .doctor-note-chevron { transform: rotate(180deg); }
+.doctor-note-stat { margin-left: auto; color: #8b8f9e; font-size: 10.5px; font-weight: 700; letter-spacing: .02em; white-space: nowrap; }
+.doctor-note-body { padding: 4px 2px 2px; }
+.doctor-note-body p { margin: 0 0 10px; color: #3f465e; font-size: clamp(15px, 1.1vw, 17px); line-height: 1.55; }
+.doctor-note-source { color: #8b8f9e !important; font-size: 11px !important; font-style: italic; margin-bottom: 0 !important; }
+@media (max-width: 760px) { .doctor-note-stat { display: none; } }

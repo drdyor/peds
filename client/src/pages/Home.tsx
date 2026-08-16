@@ -1,8 +1,9 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, FileText, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, Command, FileText, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
+import { doctorNotes } from "@/lib/explanations";
 
 type Rating = "hard" | "easy";
 type ValidationState = "verified" | "needs-review" | "rejected";
@@ -70,14 +71,22 @@ function answerParts(card: Flashcard, hasOptions: boolean) {
 }
 
 function speakableAnswer(text: string) {
-  // Speak the ANSWER ONLY — not the explanation, caveat or source note. Reading the whole
-  // block aloud turns a one-line answer into a paragraph of narration.
-  const answerOnly = text.split(/\s*(?:Explanation:|Caveat:|Memory cue:)/i)[0];
-  return answerOnly
+  // Normally speak the ANSWER LINE ONLY — narrating a whole explanation defeats the point.
+  // EXCEPTION: on INVALID/OUTDATED cards the answer line is just "invalid, do not memorize",
+  // and ALL the teaching sits in the caveat that follows, so those are read in full.
+  const isInvalid = /INVALID\s*\/\s*OUTDATED/i.test(text);
+  const spoken = isInvalid ? text : text.split(/\s*(?:Explanation:|Caveat:|Memory cue:)/i)[0];
+  return spoken
     .replace(/^Answer:\s*([A-E])\s*[:.]\s*/i, "Answer $1. ")
-    .replace(/INVALID\s*\/\s*OUTDATED\s*-?\s*/i, "Invalid or outdated. ")
-    .replace(/≥/g, "at least ")
+    .replace(/^Answer:\s*/i, "")
+    .replace(/INVALID\s*\/\s*OUTDATED\s*[-\u2014]?\s*/gi, "This item is invalid or outdated. ")
+    .replace(/\s*Caveat:\s*/gi, ". Caveat. ")
+    .replace(/\s*Explanation:\s*/gi, ". Explanation. ")
+    .replace(/\s*2026 GUIDELINE NOTE\s*\(ESID\):\s*/gi, ". 2026 guideline note. ")
+    .replace(/\u2265\s*/g, "at least ")
     .replace(/\s+/g, " ")
+    .replace(/\s*\.\s*\./g, ".")
+    .replace(/(^|\.\s+)([a-z])/g, (_m, lead, ch) => lead + ch.toUpperCase())
     .replace(/\s*[.;,]\s*$/, "")
     .trim();
 }
@@ -137,6 +146,7 @@ export default function Home() {
   const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean; speech: boolean }>(() => loadFeedback());
   const cardBodyRef = useRef<HTMLDivElement>(null);
   const [speaking, setSpeaking] = useState(false);
+  const [showDoctorNote, setShowDoctorNote] = useState(false);
   const speechSupported = typeof window !== "undefined" && "speechSynthesis" in window;
   const [overflowing, setOverflowing] = useState(false);
 
@@ -198,6 +208,7 @@ export default function Home() {
     // Always start a card at its question — revealing must never leave the stem scrolled
     // off the top of the card.
     if (cardBodyRef.current) cardBodyRef.current.scrollTop = 0;
+    setShowDoctorNote(false);
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
@@ -271,6 +282,7 @@ export default function Home() {
   const question = cardQuestions[card.id];
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
   const answer = answerParts(card, Boolean(question));
+  const doctorNote = doctorNotes[card.id];
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
 
   // Speak the answer when it becomes visible, if the reader is switched on. Any card change
@@ -409,6 +421,19 @@ export default function Home() {
                     </div>
                   );
                 })}
+              </div>}
+              {doctorNote && <div className={`doctor-note ${showDoctorNote ? "is-open" : ""}`}>
+                <button className="doctor-note-toggle" onClick={(event) => { event.stopPropagation(); const opening = !showDoctorNote; setShowDoctorNote(opening); if (opening) window.setTimeout(() => event.currentTarget?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }} aria-expanded={showDoctorNote}>
+                  <ChevronDown size={15} className="doctor-note-chevron" />
+                  <span>Doctors&rsquo; explanation</span>
+                  {doctorNote.consensusPct !== null && doctorNote.doctorsN !== null && (
+                    <span className="doctor-note-stat">{doctorNote.consensusPct}% of {doctorNote.doctorsN.toLocaleString()} doctors chose {doctorNote.key || "the key"}</span>
+                  )}
+                </button>
+                {showDoctorNote && <div className="doctor-note-body">
+                  {doctorNote.text.split("\n").map((para) => para.trim()).filter(Boolean).map((para) => <p key={para}>{para}</p>)}
+                  <p className="doctor-note-source">Konsylium doctors&rsquo; explanation, from your LEK pediatrics audit bundle{/some Polish/i.test(doctorNote.language) ? " · some Polish left in the original" : ""}.</p>
+                </div>}
               </div>}</>}
             </div>
             <div className="card-footer"><span>{revealed ? "Answer revealed · nice work" : "Recall first, then reveal"}</span><span className="card-corner"><Sparkles size={17} /></span></div>
