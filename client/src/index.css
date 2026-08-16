@@ -235,3 +235,13 @@ button { font: inherit; }
    body type. Without this a five-item stem renders five display-size paragraphs. */
 .card-question.has-enum { font-size: clamp(21px, 1.75vw, 27px); line-height: 1.2; }
 .card-question.has-enum .enum-item { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; font-size: clamp(15px, 1.05vw, 17px); font-weight: 400; letter-spacing: 0; line-height: 1.45; margin-top: 7px; color: #3a4260; }
+
+/* Read-aloud control on the answer block (browser speech synthesis — no vendor audio). */
+.speak-button { display: inline-flex; align-items: center; gap: 5px; margin-left: auto; padding: 4px 10px; border: 1px solid currentColor; border-radius: 99px; background: transparent; color: var(--card-accent); font-size: 10px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; opacity: .78; transition: opacity 150ms ease-out, transform 150ms ease-out; }
+.speak-button:hover { opacity: 1; transform: translateY(-1px); }
+.speak-button.is-speaking { opacity: 1; background: color-mix(in srgb, var(--card-accent) 12%, transparent); }
+.answer-label { display: flex; align-items: center; gap: 7px; }
+
+/* The repeated verify-this warning, collapsed to one marker + a single footnote. */
+.verify-mark { color: var(--card-accent); font-weight: 800; margin-left: 2px; cursor: help; }
+/* .verify-footnote retired: the note is stated once in the rail, not on every card. */

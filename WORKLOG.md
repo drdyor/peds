@@ -33,3 +33,39 @@ forks is a log nobody reads.
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Strip Manus scaffolding; add gate…` — Commit the work locally
 - edited `project_peds_flashcards_vercel_2026-08-16.md` — `C:\Users\Forre\.claude\projects\C--Users-Forre\memory\project_peds_flashcards_vercel_2026-08-16.md`
 - ran `python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\lib\cards.ts" s=open(p,encoding="utf-8"…` — Verify card counts from the saved repo
+- ran `cd "C:/Users/Forre/peds" && git fetch origin 2>&1 | tail -3; echo "=== local vs remote ==="; git log --oneline -1 HEAD; git log --oneline -3 origin/ma…` — Fetch latest from GitHub and diff
+- ran `cd "C:/Users/Forre/peds" && for f in study-assets/MANIFEST.md study-assets/Pediatrics_LEK_Flashcard_QA_Report.txt study-assets/Pediatrics_LEK_Source_D…` — Read manifest, QA report and drill summary
+- ran `cd "C:/Users/Forre/peds" && mkdir -p /tmp/sa 2>/dev/null; T="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1…` — Extract and inspect the CSV export
+- ran `python - <<'PY' import sys,json,re,collections sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\lib\cards.ts" s=open(p,enco…` — Characterise the 831 cards by id range, status, category
+- ran `python - <<'PY' import sys,json,collections sys.stdout.reconfigure(encoding="utf-8") s=open(r"C:\Users\Forre\peds\client\src\lib\cards.ts",encoding="u…` — Break down remaining bare negative cards by range
+- ran `cd "C:/Users/Forre/Downloads/Telegram Desktop" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") try:     import pypdf; print("py…` — Check PDF text extraction libraries
+- ran `python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") s=open(r"C:\Users\Forre\peds\client\src\lib\cards.ts",encoding="utf-8").re…` — List the 16 fixable bare negative cards
+- ran `cd "C:/Users/Forre/Downloads/Telegram Desktop" && python - <<'PY' import sys,fitz sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\…` — Extract text from the source peds PDF
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Check if source text contains MCQ stems and options
+- ran `D="/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09"; ls -la "$D"; echo "=== bank head ==="; head -c 1200 "$D/pediatrics_bank.jsonl"; echo; echo…` — Inspect Eva's own audited peds question bank
+- ran `D="/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09"; echo "=== audit csv header ==="; head -2 "$D/pediatrics_audit.csv" | cut -c1-600; echo; ec…` — Inspect audit CSV and README
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,fitz sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\F…` — Extract the CEM pediatrics exam papers
+- ran `python - <<'PY' import sys,re,json sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-…` — Parse CEM papers into questions with options
+- ran `python - <<'PY' import sys,re,json,difflib sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa8…` — Match deck cards to CEM questions by stem
+- ran `python - <<'PY' import sys,re,json,difflib sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa8…` — Re-match with page headers stripped
+- ran `python - <<'PY' import sys,re,json,difflib sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa8…` — Validate alignment and resolve unmatched cards
+- ran `python - <<'PY' import sys,re,json,difflib sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa8…` — Finalise mapping and check answer-key extraction
+- ran `python - <<'PY' import sys,re,json,difflib sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa8…` — Verify Manus option texts against the CEM paper
+- ran `python - <<'PY' import sys,re,json sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-…` — Generate full option data for all 358 questions
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").read…` — Wire full option rendering and list formatting
+- ran `cd "C:/Users/Forre/peds" && pnpm install --no-frozen-lockfile 2>&1 | tail -4 && npx tsc --noEmit 2>&1 | head -6; echo "--tsc exit above--"; npx vite b…` — Install deps and build the durable copy
+- ran `python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") s=open(r"C:\Users\Forre\peds\client\src\lib\cards.ts",encoding="utf-8").re…` — Read card 5 content and options
+- ran `python - <<'PY' import sys,json sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\lib\cards.ts" s=open(p,encoding="utf-8").r…` — Append ESID guideline note to card 5 and rebuild
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4174 --bind 127.0.0.1` — Serve rebuilt app
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; for n in 3 5; do echo "===== car…` — Render cards 3 and 5
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; curl -s -o /dev/null -w "server: %{http_c…` — Diagnose renderer output for card 3
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; python - <<'PY' p=r"C:\Users\Forre\AppDat…` — Re-render card 3 with fixed probe
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/shoot_card.js" http://localhost:…` — Render card 5
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").r…` — Rebuild with proper enumerated typography
+- ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" s=open(p,encoding="utf-8").read…` — Add scroll reset and re-render card 5
+- ran `python - <<'PY' p=r"C:\Users\Forre\peds\client\src\index.css" s=open(p,encoding="utf-8").read() old=".card-body { flex: 1; padding: 40px 6%; display: …` — Fix flex centring clip and re-render
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1 | head -4; echo "[tsc clean if empty above]"; npx vitest run 2>&1 | grep -E "Test Files|Tests "; S="…` — Type-check, test, verify EXCEPT card still correct
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Show every option on all 358 exam…` — Commit the option-table work
+- ran `vercel deploy --prod --cwd "C:/Users/Forre/peds" --yes 2>&1 | grep -E "Production|Error" | head -2` — Deploy to production
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live production
+- edited `project_peds_flashcards_vercel_2026-08-16.md` — `C:\Users\Forre\.claude\projects\C--Users-Forre\memory\project_peds_flashcards_vercel_2026-08-16.md`

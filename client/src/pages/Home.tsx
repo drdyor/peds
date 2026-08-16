@@ -1,6 +1,6 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, FileText, ListChecks, ListFilter, RotateCcw, Sparkles, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, FileText, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 
@@ -34,9 +34,9 @@ function loadValidation(): ValidationMap {
 
 function loadFeedback() {
   try {
-    return { sound: true, haptics: true, ...JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "{}") };
+    return { sound: true, haptics: true, speech: false, ...JSON.parse(localStorage.getItem(FEEDBACK_KEY) || "{}") };
   } catch {
-    return { sound: true, haptics: true };
+    return { sound: true, haptics: true, speech: false };
   }
 }
 
@@ -44,14 +44,47 @@ function loadFeedback() {
 // had already dropped. Where the real option table is now rendered below, that dangling
 // sentence is removed for display only — cards.ts is left byte-for-byte intact.
 const DANGLING_TABLE_REF = /\s*The (?:table\/true-set|true-set|table) above shows what remains correct\.?/gi;
-function answerText(card: Flashcard, hasOptions: boolean) {
-  return hasOptions ? card.back.replace(DANGLING_TABLE_REF, "").trim() : card.back;
+
+// The same two verify-this warnings are stamped on 433 cards. Spelled out on every card they
+// are visual noise that crowds the actual answer, so they collapse to a single "*" with one
+// footnote under the card. Nothing is lost — the wording moves to the footnote, and the
+// card's own source-status tag still shows in the header.
+const VERIFY_NOTES: { pattern: RegExp; note: string }[] = [
+  { pattern: /\s*Legacy source number\s*[—-]\s*verify against current local\/national guidance before clinical use\.?/gi,
+    note: "Legacy source number — verify against current local/national guidance before clinical use." },
+  { pattern: /\s*SOURCE-DERIVED\s*[—-]\s*verify before clinical use\.?/gi,
+    note: "Source-derived — verify before clinical use." },
+];
+
+function answerParts(card: Flashcard, hasOptions: boolean) {
+  let text = hasOptions ? card.back.replace(DANGLING_TABLE_REF, "") : card.back;
+  const notes: string[] = [];
+  for (const { pattern, note } of VERIFY_NOTES) {
+    if (pattern.test(text)) {
+      notes.push(note);
+      text = text.replace(pattern, "");
+    }
+    pattern.lastIndex = 0;
+  }
+  return { text: text.replace(/\s+/g, " ").trim(), notes };
 }
 
-// Stems and options often pack an enumerated list onto one line ("1) x; 2) y; 3) z"),
-// which reads as a wall of text. Split those onto their own lines. The lead-in keeps the
-// editorial display face; the enumerated items drop to body type so a 5-item stem does not
-// fill the whole card.
+function speakableAnswer(text: string) {
+  // Speak the ANSWER ONLY — not the explanation, caveat or source note. Reading the whole
+  // block aloud turns a one-line answer into a paragraph of narration.
+  const answerOnly = text.split(/\s*(?:Explanation:|Caveat:|Memory cue:)/i)[0];
+  return answerOnly
+    .replace(/^Answer:\s*([A-E])\s*[:.]\s*/i, "Answer $1. ")
+    .replace(/INVALID\s*\/\s*OUTDATED\s*-?\s*/i, "Invalid or outdated. ")
+    .replace(/≥/g, "at least ")
+    .replace(/\s+/g, " ")
+    .replace(/\s*[.;,]\s*$/, "")
+    .trim();
+}
+
+// Stems and options often pack an enumerated list onto one line ("1) x; 2) y; 3) z"), which
+// reads as a wall of text. Split those onto their own lines. The lead-in keeps the editorial
+// display face; the items drop to body type so a 5-item stem does not fill the whole card.
 function splitEnumerated(text: string) {
   const parts = text.split(/\s+(?=\d\)\s)/);
   return parts.length >= 3 ? { lead: parts[0], items: parts.slice(1) } : { lead: text, items: [] as string[] };
@@ -67,6 +100,16 @@ function EnumeratedText({ text }: { text: string }) {
         <span className="enum-item" key={item}>{item}</span>
       ))}
     </>
+  );
+}
+
+function pickVoice() {
+  const voices = window.speechSynthesis.getVoices();
+  return (
+    voices.find((v) => /en-GB/i.test(v.lang)) ||
+    voices.find((v) => /^en/i.test(v.lang)) ||
+    voices[0] ||
+    null
   );
 }
 
@@ -91,8 +134,10 @@ export default function Home() {
   const [revealed, setRevealed] = useState(false);
   const [notice, setNotice] = useState("");
   const [sessionReviewed, setSessionReviewed] = useState(0);
-  const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean }>(() => loadFeedback());
+  const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean; speech: boolean }>(() => loadFeedback());
   const cardBodyRef = useRef<HTMLDivElement>(null);
+  const [speaking, setSpeaking] = useState(false);
+  const speechSupported = typeof window !== "undefined" && "speechSynthesis" in window;
   const [overflowing, setOverflowing] = useState(false);
 
   const counts = useMemo(() => {
@@ -158,6 +203,8 @@ export default function Home() {
     return () => window.removeEventListener("resize", measure);
   }, [revealed, index, filter, topicFilter]);
 
+
+
   function giveFeedback(kind: "reveal" | "easy" | "hard") {
     if (feedback.haptics && "vibrate" in navigator) navigator.vibrate(kind === "reveal" ? 8 : kind === "easy" ? [12, 35, 12] : [20, 35, 20]);
     if (!feedback.sound) return;
@@ -180,8 +227,30 @@ export default function Home() {
     window.setTimeout(() => void audio.close(), 260);
   }
 
-  function toggleFeedback(key: "sound" | "haptics") {
+  function speakAnswer(text: string) {
+    if (!speechSupported) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(speakableAnswer(text));
+    const voice = pickVoice();
+    if (voice) utterance.voice = voice;
+    utterance.lang = voice?.lang || "en-GB";
+    utterance.rate = 0.95;
+    utterance.onend = () => setSpeaking(false);
+    utterance.onerror = () => setSpeaking(false);
+    setSpeaking(true);
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function stopSpeaking() {
+    if (!speechSupported) return;
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+  }
+
+  function toggleFeedback(key: "sound" | "haptics" | "speech", event?: React.MouseEvent<HTMLButtonElement>) {
     setFeedback((current) => ({ ...current, [key]: !current[key] }));
+    // Leave focus behind, or the next SPACE re-presses this toggle instead of revealing.
+    event?.currentTarget.blur();
   }
 
   useEffect(() => {
@@ -201,7 +270,26 @@ export default function Home() {
   const palette = PALETTES[card.id % PALETTES.length];
   const question = cardQuestions[card.id];
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
+  const answer = answerParts(card, Boolean(question));
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
+
+  // Speak the answer when it becomes visible, if the reader is switched on. Any card change
+  // cancels playback immediately so answers never overlap or trail the wrong card.
+  useEffect(() => {
+    if (!speechSupported) return;
+    window.speechSynthesis.cancel();
+    setSpeaking(false);
+    if (revealed && feedback.speech) {
+      const timer = window.setTimeout(() => speakAnswer(answer.text), 120);
+      return () => {
+        window.clearTimeout(timer);
+        window.speechSynthesis.cancel();
+      };
+    }
+    return () => window.speechSynthesis.cancel();
+  }, [revealed, card.id, feedback.speech]);
+
+  useEffect(() => () => { if (speechSupported) window.speechSynthesis.cancel(); }, []);
 
   function move(direction: number) {
     if (!deck.length) return;
@@ -272,6 +360,7 @@ export default function Home() {
           <div className="rail-footer">
           <div className="shortcut-row"><Star size={15} /><span><strong>Hard</strong> is saved automatically — open Hard pile anytime.</span></div>
           <div className="shortcut-row"><Command size={15} /><span>Space to reveal</span></div>
+          <div className="shortcut-row"><span className="verify-mark">*</span><span>verify against current guidance</span></div>
           <div className="shortcut-row"><span className="keycap">H</span><span>Hard</span><span className="keycap">E</span><span>Easy</span></div>
           <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield reading (2026)</a>
           <button className="reset-button" onClick={resetProgress}><RotateCcw size={14} /> Reset progress</button>
@@ -282,8 +371,9 @@ export default function Home() {
         <header className="topbar">
           <div><p className="eyebrow">Active deck</p><p className="topbar-title">LEK 2026 · Audited & corrected</p></div>
           <div className="topbar-meta"><span className="saved-dot" /> Saved locally <span className="divider" /> <BookOpen size={15} /> {deck.length} in queue <span className="feedback-controls" aria-label="Feedback preferences">
-            <button className={`feedback-toggle ${feedback.sound ? "on" : ""}`} onClick={() => toggleFeedback("sound")} aria-label={`${feedback.sound ? "Disable" : "Enable"} sound feedback`} title={`${feedback.sound ? "Disable" : "Enable"} sound feedback`}>{feedback.sound ? <Volume2 size={15} /> : <VolumeX size={15} />}</button>
-            <button className={`feedback-toggle ${feedback.haptics ? "on" : ""}`} onClick={() => toggleFeedback("haptics")} aria-label={`${feedback.haptics ? "Disable" : "Enable"} haptic feedback`} title={`${feedback.haptics ? "Disable" : "Enable"} haptic feedback`}><Vibrate size={15} /></button>
+            <button className={`feedback-toggle ${feedback.sound ? "on" : ""}`} onClick={(event) => toggleFeedback("sound", event)} aria-label={`${feedback.sound ? "Disable" : "Enable"} sound feedback`} title={`${feedback.sound ? "Disable" : "Enable"} sound feedback`}>{feedback.sound ? <Volume2 size={15} /> : <VolumeX size={15} />}</button>
+            <button className={`feedback-toggle ${feedback.speech ? "on" : ""}`} onClick={(event) => toggleFeedback("speech", event)} aria-label={`${feedback.speech ? "Stop reading" : "Read"} answers aloud`} title={`${feedback.speech ? "Stop reading" : "Read"} answers aloud automatically`}><Headphones size={15} /></button>
+            <button className={`feedback-toggle ${feedback.haptics ? "on" : ""}`} onClick={(event) => toggleFeedback("haptics", event)} aria-label={`${feedback.haptics ? "Disable" : "Enable"} haptic feedback`} title={`${feedback.haptics ? "Disable" : "Enable"} haptic feedback`}><Vibrate size={15} /></button>
           </span></div>
         </header>
 
@@ -305,7 +395,7 @@ export default function Home() {
             <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
               <p className={`card-question ${splitEnumerated(card.front).items.length ? "has-enum" : ""}`}><EnumeratedText text={card.front} /></p>
-              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue</div><p>{answerText(card, Boolean(question))}</p></div>{question && <div className="option-table">
+              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue{speechSupported && <button className={`speak-button ${speaking ? "is-speaking" : ""}`} onClick={(event) => { event.stopPropagation(); speaking ? stopSpeaking() : speakAnswer(answer.text); }} aria-label={speaking ? "Stop reading the answer" : "Read the answer aloud"} title={speaking ? "Stop" : "Read the answer aloud"}>{speaking ? <Square size={13} /> : <Play size={13} />}<span>{speaking ? "Stop" : "Listen"}</span></button>}</div><p>{answer.text}{answer.notes.length > 0 && <sup className="verify-mark" title={answer.notes.join(" ")}>*</sup>}</p></div>{question && <div className="option-table">
                 <div className="prompt-label option-table-label"><ListChecks size={16} /> {question.keyed === null ? "All five options — legacy key withdrawn, nothing highlighted" : question.negative ? "Every option — the excluded one is the answer" : "Every option, as printed on the exam paper"}</div>
                 {question.options.map((option) => {
                   const isKeyed = option.letter === question.keyed;
