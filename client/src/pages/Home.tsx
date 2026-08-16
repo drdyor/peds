@@ -1,7 +1,8 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
-import { useEffect, useMemo, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, ListFilter, RotateCcw, Sparkles, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, Command, FileText, ListChecks, ListFilter, RotateCcw, Sparkles, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
+import { cardOptions } from "@/lib/options";
 
 type Rating = "hard" | "easy";
 type ValidationState = "verified" | "needs-review" | "rejected";
@@ -39,6 +40,14 @@ function loadFeedback() {
   }
 }
 
+// Manus's generator ended EXCEPT-card answers with a pointer to a "table above" that it
+// had already dropped. Where the real option table is now rendered below, that dangling
+// sentence is removed for display only — cards.ts is left byte-for-byte intact.
+const DANGLING_TABLE_REF = /\s*The (?:table\/true-set|true-set|table) above shows what remains correct\.?/gi;
+function answerText(card: Flashcard, hasOptions: boolean) {
+  return hasOptions ? card.back.replace(DANGLING_TABLE_REF, "").trim() : card.back;
+}
+
 function statusLabel(card: Flashcard, state?: ValidationState) {
   if (card.status === "source-derived") {
     if (state === "verified") return "Verified locally";
@@ -61,6 +70,8 @@ export default function Home() {
   const [notice, setNotice] = useState("");
   const [sessionReviewed, setSessionReviewed] = useState(0);
   const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean }>(() => loadFeedback());
+  const cardBodyRef = useRef<HTMLDivElement>(null);
+  const [overflowing, setOverflowing] = useState(false);
 
   const counts = useMemo(() => {
     const values = Object.values(progress);
@@ -110,6 +121,18 @@ export default function Home() {
     setRevealed(false);
   }, [filter, topicFilter]);
 
+  // The fade cue must reflect reality, so measure the rendered body rather than guessing
+  // from card length. Re-measured on reveal, card change, and viewport resize.
+  useEffect(() => {
+    const measure = () => {
+      const node = cardBodyRef.current;
+      if (node) setOverflowing(node.scrollHeight > node.clientHeight + 1);
+    };
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [revealed, index, filter, topicFilter]);
+
   function giveFeedback(kind: "reveal" | "easy" | "hard") {
     if (feedback.haptics && "vibrate" in navigator) navigator.vibrate(kind === "reveal" ? 8 : kind === "easy" ? [12, 35, 12] : [20, 35, 20]);
     if (!feedback.sound) return;
@@ -151,6 +174,7 @@ export default function Home() {
 
   const card = deck[index] ?? flashcards[0];
   const palette = PALETTES[card.id % PALETTES.length];
+  const options = cardOptions[card.id];
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
 
@@ -224,6 +248,7 @@ export default function Home() {
           <div className="shortcut-row"><Star size={15} /><span><strong>Hard</strong> is saved automatically — open Hard pile anytime.</span></div>
           <div className="shortcut-row"><Command size={15} /><span>Space to reveal</span></div>
           <div className="shortcut-row"><span className="keycap">H</span><span>Hard</span><span className="keycap">E</span><span>Easy</span></div>
+          <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield reading (2026)</a>
           <button className="reset-button" onClick={resetProgress}><RotateCcw size={14} /> Reset progress</button>
         </div>
       </aside>
@@ -250,12 +275,21 @@ export default function Home() {
             <div className="card-position"><span>{deck.length ? String(index + 1).padStart(3, "0") : "000"}</span><span className="slash">/</span><span>{String(deck.length).padStart(3, "0")}</span></div>
           </div>
 
-          <div className={`flashcard ${revealed ? "is-revealed" : ""} palette-${palette}`} onClick={() => setRevealed((current) => { giveFeedback("reveal"); return !current; })} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setRevealed((current) => !current); }}>
+          <div className={`flashcard ${revealed ? "is-revealed" : ""} ${overflowing ? "has-overflow" : ""} palette-${palette}`} onClick={() => setRevealed((current) => { giveFeedback("reveal"); return !current; })} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setRevealed((current) => !current); }}>
             <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span><span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
-            <div className="card-body">
+            <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
               <p className="card-question">{card.front}</p>
-              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue</div><p>{card.back}</p></div>}
+              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue</div><p>{answerText(card, Boolean(options))}</p></div>{options && <div className="option-table">
+                <div className="prompt-label option-table-label"><ListChecks size={16} /> Every option, from your audited master</div>
+                {options.map((option) => (
+                  <div key={option.letter} className={`option-row ${option.correct ? "is-true" : "is-false"}`}>
+                    <span className="option-letter">{option.letter}</span>
+                    <span className="option-text">{option.text}</span>
+                    <span className="option-status">{option.correct ? "TRUE" : "FALSE / EXCLUDED"}</span>
+                  </div>
+                ))}
+              </div>}</>}
             </div>
             <div className="card-footer"><span>{revealed ? "Answer revealed · nice work" : "Recall first, then reveal"}</span><span className="card-corner"><Sparkles size={17} /></span></div>
           </div>

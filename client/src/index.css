@@ -30,7 +30,9 @@
 }
 
 :root { font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif; color: #15203b; background: #f7f3eb; }
-body { background-color: #f7f3eb; background-image: url("/manus-storage/study-paper-texture_21b7ef20.png"); background-size: 680px auto; }
+/* Paper grain: rebuilt in-repo as SVG. The original lived on the Manus /manus-storage
+   proxy, which exists only on manus.computer and 404s anywhere else. */
+body { background-color: #f7f3eb; background-image: url("./assets/paper-texture.svg"); background-size: 680px auto; }
 button { font: inherit; }
 
 .app-shell { min-height: 100vh; display: grid; grid-template-columns: 268px minmax(0, 1fr); background: rgba(247,243,235,.78); --card-accent: #e06759; --card-wash: #fff6e7; --card-border: #ded7c9; }
@@ -66,7 +68,7 @@ button { font: inherit; }
 .reset-button:hover { color: #e06759; }
 
 .study-workspace { min-width: 0; position: relative; overflow: hidden; }
-.study-workspace::after { content: ""; position: absolute; right: 4%; top: 11%; width: 300px; height: 220px; background: url("/manus-storage/pediatric-constellation_ffc6fbc8.png") center / contain no-repeat; opacity: .12; pointer-events: none; }
+.study-workspace::after { content: ""; position: absolute; right: 4%; top: 11%; width: 300px; height: 220px; background: url("./assets/constellation.svg") center / contain no-repeat; opacity: .12; pointer-events: none; }
 .topbar { height: 80px; padding: 0 6vw; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(22,71,232,.09); position: relative; z-index: 1; }
 .topbar-title { margin: 0; color: #4b5570; font-size: 13px; font-weight: 700; }
 .topbar-meta { display: flex; align-items: center; gap: 8px; color: #8990a2; font-size: 11px; }
@@ -76,18 +78,18 @@ button { font: inherit; }
 .feedback-toggle.on { color: #4a9a83; background: #e8f5ed; }
 .saved-dot { width: 7px; height: 7px; border-radius: 50%; background: #66ad83; box-shadow: 0 0 0 4px rgba(102,173,131,.12); }
 .divider { height: 17px; width: 1px; background: #ddd7cb; margin: 0 8px; }
-.workspace-content { width: min(800px, calc(100% - 12vw)); margin: 0 auto; padding: 9vh 0 42px; position: relative; z-index: 1; }
-.study-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 25px; }
+.workspace-content { width: min(1180px, calc(100% - 8vw)); margin: 0 auto; padding: 26px 0 34px; position: relative; z-index: 1; }
+.study-heading { display: flex; justify-content: space-between; align-items: end; margin-bottom: 18px; }
 .accent-eyebrow { color: #e06759; }
-.study-heading h2 { margin: 5px 0 0; font-family: Fraunces, Georgia, serif; font-weight: 500; font-size: clamp(33px, 4vw, 51px); line-height: .98; letter-spacing: -.055em; color: #17244b; }
+.study-heading h2 { margin: 5px 0 0; font-family: Fraunces, Georgia, serif; font-weight: 500; font-size: clamp(30px, 2.9vw, 42px); line-height: .98; letter-spacing: -.055em; color: #17244b; }
 .session-chip { display: inline-flex; align-items: center; gap: 6px; margin-top: 13px; padding: 6px 10px; border-radius: 99px; color: var(--card-accent); background: color-mix(in srgb, var(--card-wash) 82%, white); font-size: 11px; font-weight: 800; }
 .card-category { display: inline-flex; align-items: center; gap: 4px; margin-left: auto; margin-right: 8px; color: var(--card-accent); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
 .card-position { display: flex; align-items: baseline; gap: 8px; color: #1647e8; font-family: Fraunces, Georgia, serif; font-size: 25px; }
 .card-position .slash { color: #bbb3a7; font-size: 17px; }
 .card-position span:last-child { color: #9b9a9d; font-size: 17px; }
-.flashcard { min-height: 435px; display: flex; flex-direction: column; border: 1px solid var(--card-border); border-radius: 18px; background: linear-gradient(135deg, rgba(255,252,245,.97), color-mix(in srgb, var(--card-wash) 52%, white)); box-shadow: 18px 18px 0 color-mix(in srgb, var(--card-accent) 12%, transparent), 0 18px 42px rgba(53,48,33,.08); cursor: pointer; transition: transform 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease-out, background 280ms ease-out; }
+.flashcard { min-height: 400px; display: flex; flex-direction: column; border: 1px solid var(--card-border); border-radius: 18px; background: linear-gradient(135deg, rgba(255,252,245,.97), color-mix(in srgb, var(--card-wash) 52%, white)); box-shadow: 18px 18px 0 color-mix(in srgb, var(--card-accent) 12%, transparent), 0 18px 42px rgba(53,48,33,.08); cursor: pointer; transition: transform 180ms cubic-bezier(.23,1,.32,1), box-shadow 180ms ease-out, background 280ms ease-out; }
 .flashcard:hover { transform: translateY(-3px) rotate(.15deg); box-shadow: 21px 22px 0 rgba(220, 206, 184, .3), 0 22px 50px rgba(53,48,33,.11); }
-.card-topline, .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; }
+.card-topline, .card-footer { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; }
 .card-topline { border-bottom: 1px solid #ede7dc; }
 .card-id { color: #9297a2; }
 .source-tag { font-size: 10px; font-weight: 800; padding: 5px 9px; border-radius: 999px; }
@@ -107,18 +109,20 @@ button { font: inherit; }
 .validation-button:disabled { opacity: .4; cursor: not-allowed; }
 .caveat\/updated { color: #866a1d; background: #fbf0c9; }
 .invalid\/outdated { color: #a04d46; background: #f9ddd7; }
-.card-body { flex: 1; padding: 33px 8%; display: flex; flex-direction: column; justify-content: center; }
+.card-body { flex: 1; padding: 40px 6%; display: flex; flex-direction: column; justify-content: center; }
 .prompt-label { display: inline-flex; align-items: center; gap: 7px; color: #8990a0; }
-.card-question { margin: 17px 0 20px; max-width: 675px; font-family: Fraunces, Georgia, serif; font-size: clamp(24px, 3.1vw, 35px); line-height: 1.19; letter-spacing: -.025em; color: #18254b; }
+.card-question { margin: 17px 0 20px; max-width: 900px; font-family: Fraunces, Georgia, serif; font-size: clamp(25px, 2.5vw, 38px); line-height: 1.17; letter-spacing: -.025em; color: #18254b; }
 .reveal-prompt { display: flex; align-items: center; gap: 8px; color: #9c9a9a; font-size: 12px; margin-top: 15px; }
 .reveal-icon { display: grid; place-items: center; width: 25px; height: 25px; color: #1647e8; border: 1px solid #bfcaf5; border-radius: 50%; }
 .reveal-prompt .keycap { margin-left: auto; }
-.answer-block { border-left: 3px solid var(--card-accent); background: var(--card-wash); padding: 15px 18px 16px; margin-top: 8px; border-radius: 0 10px 10px 0; }
+.answer-block { border-left: 4px solid var(--card-accent); background: var(--card-wash); padding: 24px 30px 26px; margin-top: 14px; border-radius: 0 12px 12px 0; }
 .answer-label { color: var(--card-accent); }
-.answer-block p { margin: 9px 0 0; color: #4e5367; font-size: 14px; line-height: 1.6; max-height: 180px; overflow: auto; }
+/* Answer is the thing being learned — it gets the size. The old 14px inside a 180px
+   scroll box hid the back half of long explanations on a desktop screen. */
+.answer-block p { margin: 12px 0 0; color: #3f465e; font-size: clamp(18px, 1.45vw, 23px); line-height: 1.58; max-height: min(46vh, 520px); overflow: auto; }
 .card-footer { color: #a4a0a0; font-size: 11px; border-top: 1px solid #ede7dc; }
 .card-corner { color: var(--card-accent); font-size: 19px; display: inline-flex; animation: gentle-sparkle 2.8s ease-in-out infinite; }
-.action-row { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 29px; }
+.action-row { display: flex; justify-content: center; align-items: center; gap: 12px; margin-top: 20px; }
 .nav-button, .rate-button { border: 1px solid #dcd6cb; background: #fffaf0; color: #72788d; height: 45px; border-radius: 10px; transition: transform 150ms ease-out, color 150ms ease-out, background 150ms ease-out, opacity 150ms ease-out; }
 .nav-button { width: 45px; display: grid; place-items: center; }
 .nav-button:hover { color: #1647e8; border-color: #9fb2f3; transform: translateY(-2px); }
@@ -136,5 +140,84 @@ button { font: inherit; }
 .empty-state svg { color: #1647e8; }
 @keyframes toast-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes gentle-sparkle { 0%, 100% { transform: rotate(-5deg) scale(1); } 50% { transform: rotate(5deg) scale(1.12); } }
-@media (max-width: 760px) { .topic-toolbar { align-items: stretch; flex-direction: column; } .topic-toolbar select { min-width: 0; width: 100%; } .validation-panel { align-items: stretch; flex-direction: column; } .validation-actions { justify-content: stretch; } .validation-button { flex: 1; justify-content: center; } .app-shell { display: block; } .side-rail { border-right: 0; border-bottom: 1px solid rgba(22,71,232,.13); padding: 18px 20px; } .rail-intro, .progress-card, .rail-footer { display: none; } .brand-lockup { justify-content: center; } .deck-nav { margin: 17px 0 0; display: flex; gap: 6px; overflow-x: auto; } .section-kicker { display: none; } .filter-button { min-width: max-content; border: 1px solid #e0d8cc; border-radius: 99px; padding: 8px 10px 8px 12px; gap: 9px; } .filter-button.active { border-color: #1647e8; } .topbar { height: 63px; padding: 0 20px; } .topbar-meta { font-size: 0; } .topbar-meta > svg { display: none; } .feedback-controls { margin-left: 0; } .feedback-toggle { width: 28px; height: 28px; } .workspace-content { width: calc(100% - 40px); padding: 44px 0 30px; } .study-heading { align-items: start; } .study-heading h2 { font-size: 37px; max-width: 280px; } .card-position { font-size: 20px; } .flashcard { min-height: 500px; box-shadow: 9px 10px 0 rgba(220, 206, 184, .28), 0 15px 35px rgba(53,48,33,.08); } .card-body { padding: 30px 23px; } .card-question { font-size: 29px; } .card-topline, .card-footer { padding: 17px 18px; } .rate-button { min-width: 112px; } }
+@media (max-width: 760px) { .topic-toolbar { align-items: stretch; flex-direction: column; } .topic-toolbar select { min-width: 0; width: 100%; } .validation-panel { align-items: stretch; flex-direction: column; } .validation-actions { justify-content: stretch; } .validation-button { flex: 1; justify-content: center; } .app-shell { display: block; } .side-rail { border-right: 0; border-bottom: 1px solid rgba(22,71,232,.13); padding: 18px 20px; } .rail-intro, .progress-card, .rail-footer { display: none; } .brand-lockup { justify-content: center; } .deck-nav { margin: 17px 0 0; display: flex; gap: 6px; overflow-x: auto; } .section-kicker { display: none; } .filter-button { min-width: max-content; border: 1px solid #e0d8cc; border-radius: 99px; padding: 8px 10px 8px 12px; gap: 9px; } .filter-button.active { border-color: #1647e8; } .topbar { height: 63px; padding: 0 20px; } .topbar-meta { font-size: 0; } .topbar-meta > svg { display: none; } .feedback-controls { margin-left: 0; } .feedback-toggle { width: 28px; height: 28px; } .workspace-content { width: calc(100% - 40px); padding: 44px 0 30px; } .study-heading { align-items: start; } .study-heading h2 { font-size: 37px; max-width: 280px; } .card-position { font-size: 20px; } .flashcard { min-height: 400px; box-shadow: 9px 10px 0 rgba(220, 206, 184, .28), 0 15px 35px rgba(53,48,33,.08); } .card-body { padding: 30px 23px; } .card-question { font-size: 29px; } .card-topline, .card-footer { padding: 17px 18px; } .rate-button { min-width: 112px; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; } .card-corner { animation: none; } }
+
+/* ── Access gate ─────────────────────────────────────────────────────────────
+   Same paper/cobalt/coral language as the desk: a doorplate, not a login wall. */
+.gate-shell { min-height: 100vh; display: grid; place-items: center; padding: 24px; }
+.gate-card { width: min(400px, 100%); display: flex; flex-direction: column; background: #fffaf0; border: 1px solid #e6dece; border-radius: 16px; padding: 32px 30px 26px; box-shadow: 9px 10px 0 rgba(220, 206, 184, .28), 0 15px 35px rgba(53,48,33,.08); }
+.gate-card .brand-lockup { margin-bottom: 22px; }
+.gate-intro { font-family: Fraunces, Georgia, serif; font-size: 19px; line-height: 1.3; color: #3f4863; margin: 0 0 26px; }
+.gate-label { text-transform: uppercase; letter-spacing: .14em; font-size: 10px; font-weight: 800; color: #a09786; margin-bottom: 8px; }
+.gate-input { height: 46px; border: 1px solid #dcd6cb; border-bottom-width: 2px; border-radius: 10px; background: #f7f3eb; padding: 0 14px; font: inherit; font-size: 15px; color: #15203b; transition: border-color 150ms ease-out, background 150ms ease-out; }
+.gate-input:focus { outline: none; border-color: #1647e8; background: #fffdf7; }
+.gate-button { margin-top: 16px; height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 8px; border: 0; border-radius: 10px; background: #1647e8; color: #fffaf0; font-size: 13px; font-weight: 800; box-shadow: 4px 4px 0 #f2a597; transition: transform 150ms ease-out, box-shadow 150ms ease-out; }
+.gate-button:hover { transform: translateY(-2px); box-shadow: 5px 6px 0 #f2a597; }
+.gate-note { margin: 16px 0 0; text-align: center; color: #99989c; font-size: 11px; min-height: 14px; }
+.gate-card.is-wrong { animation: gate-shake 420ms ease-out; }
+.gate-card.is-wrong .gate-input { border-color: #e06759; }
+.gate-card.is-wrong .gate-note { color: #d56659; font-weight: 700; }
+@keyframes gate-shake { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 45% { transform: translateX(6px); } 70% { transform: translateX(-3px); } }
+@media (prefers-reduced-motion: reduce) { .gate-card.is-wrong { animation: none; } }
+
+/* Short-desktop compaction. On a 900px-tall laptop the editorial header pushed the
+   Hard/Easy row below the fold once the answer type was enlarged. Big monitors keep the
+   full layout; only vertically tight screens trade header drama for reachable controls. */
+@media (min-width: 761px) and (max-height: 1120px) {
+  .workspace-content { padding: 18px 0 22px; }
+  .topic-toolbar { margin-bottom: 12px; padding: 8px 13px; }
+  .study-heading { margin-bottom: 12px; }
+  .study-heading h2 { font-size: clamp(26px, 2.2vw, 33px); }
+  .session-chip { margin-top: 9px; }
+  .card-topline, .card-footer { padding: 13px 30px; }
+  .card-body { padding: 24px 6%; }
+  .card-question { margin: 13px 0 14px; }
+  .answer-block { padding: 18px 24px 20px; margin-top: 10px; }
+  .action-row { margin-top: 14px; }
+  .action-hint { display: none; }
+}
+
+/* Desktop: the study column owns the viewport height and the card takes whatever is
+   left over. No magic pixel ceilings — the Hard/Easy row is structurally always on
+   screen, and a long answer scrolls inside the card instead of pushing it down. */
+@media (min-width: 761px) {
+  .study-workspace { display: flex; flex-direction: column; height: 100vh; }
+  .workspace-content { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+  .flashcard { flex: 1 1 auto; min-height: 0; }
+  .card-body { overflow: auto; }
+  .answer-block p { max-height: none; }
+}
+
+/* ── Per-option verdict table ────────────────────────────────────────────────
+   Restored from Eva's audited master (Manus dropped these when generating cards).
+   Green = the master marks it TRUE; red = FALSE / EXCLUDED, i.e. the answer to an
+   EXCEPT/NOT stem. Status is spelled out in words, never colour alone. */
+.option-table { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+.option-table-label { color: #8990a0; margin-bottom: 2px; }
+.option-row { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: baseline; gap: 11px; padding: 9px 13px; border-radius: 9px; border: 1px solid transparent; font-size: clamp(15px, .98vw, 16.5px); line-height: 1.4; }
+.option-row.is-true { background: #eef7f1; border-color: #cfe6d8; color: #2f5c44; }
+.option-row.is-false { background: #fdeeec; border-color: #f2ccc6; color: #9c3327; font-weight: 600; }
+.option-letter { font-weight: 800; font-size: 12px; letter-spacing: .08em; opacity: .75; }
+.option-status { font-size: 10px; font-weight: 800; letter-spacing: .1em; white-space: nowrap; opacity: .8; }
+@media (max-width: 760px) { .option-row { grid-template-columns: 22px minmax(0, 1fr); } .option-status { grid-column: 2; margin-top: 2px; } }
+
+/* Tightest desktop tier: on short laptop screens the editorial headline is dropped so a
+   full 5-option verdict table is visible without scrolling inside the card. The queue
+   name (eyebrow) and counter stay — only the decorative headline goes. */
+@media (min-width: 761px) and (max-height: 920px) {
+  .study-heading h2 { display: none; }
+  .study-heading { margin-bottom: 9px; align-items: center; }
+  .session-chip { margin-top: 6px; }
+  .card-topline, .card-footer { padding: 10px 30px; }
+  .workspace-content { padding: 12px 0 18px; }
+}
+
+/* Safety net: if a card's content still overflows (very long stems, 6+ options), fade the
+   bottom edge so it is obvious there is more to scroll rather than silently clipping. */
+.card-body { position: relative; scrollbar-width: thin; }
+.flashcard.has-overflow .card-body { -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%); mask-image: linear-gradient(to bottom, #000 calc(100% - 26px), transparent 100%); }
+
+/* Link to the rewritten high-yield reading PDF (shipped with the app, not hosted off-site). */
+.reading-link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; color: #1647e8; font-size: 11px; font-weight: 700; text-decoration: none; }
+.reading-link:hover { text-decoration: underline; }

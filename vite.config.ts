@@ -1,10 +1,8 @@
-import { jsxLocPlugin } from "@builder.io/vite-plugin-jsx-loc";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import fs from "node:fs";
 import path from "node:path";
 import { defineConfig, type Plugin, type ViteDevServer } from "vite";
-import { vitePluginManusRuntime } from "vite-plugin-manus-runtime";
 
 // =============================================================================
 // Manus Debug Collector - Vite Plugin
@@ -203,7 +201,9 @@ function vitePluginStorageProxy(): Plugin {
   };
 }
 
-const plugins = [react(), tailwindcss(), jsxLocPlugin(), vitePluginManusRuntime(), vitePluginManusDebugCollector(), vitePluginStorageProxy()];
+// Manus-only plugins (runtime, debug collector, storage proxy, jsx-loc) are dev-host
+// tooling and are intentionally NOT loaded — they break/no-op outside manus.computer.
+const plugins = [react(), tailwindcss()];
 
 export default defineConfig({
   base: process.env.GITHUB_ACTIONS ? "/peds/" : "/",
@@ -217,6 +217,9 @@ export default defineConfig({
   },
   envDir: path.resolve(import.meta.dirname),
   root: path.resolve(import.meta.dirname, "client"),
+  // client/public holds only the Manus debug-collector runtime, so it is NOT used.
+  // client/public_assets holds the real shipped assets (the high-yield reading PDF).
+  publicDir: path.resolve(import.meta.dirname, "client", "public_assets"),
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
