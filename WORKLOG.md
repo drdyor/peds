@@ -166,3 +166,13 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_flag.js" <<'JS' …` — Verify flagging, persistence, queue and copy
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Flag cards that are explained poo…` — Commit and deploy flagging
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify both features live
+- ran `cd "/c/Users/Forre/Downloads" && ls -la image-gen-*.png | awk '{print $5, $9}' && python -c " import sys,glob;sys.stdout.reconfigure(encoding='utf-8')…` — Inspect the supplied images
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,glob sys.stdout.reconfigure(encoding="utf-8") from PIL import Image files=sorted(glob.glob…` — Build header montage to identify all sheets
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,os sys.stdout.reconfigure(encoding="utf-8") from PIL import Image OUT=r"C:\Users\Forre\ped…` — Convert sheets to WebP for the app
+- wrote `sheets.ts` — `C:\Users\Forre\peds\client\src\lib\sheets.ts`
+- wrote `SheetGallery.tsx` — `C:\Users\Forre\peds\client\src\components\SheetGallery.tsx`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Wire gallery, build and check size
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4183 --bind 127.0.0.1` — Serve build with gallery
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_gallery.js" <<'J…` — Verify the gallery opens and images load
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Add the Visual Master 2026 sheets…` — Commit and deploy the sheet gallery
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in sheets/sheet-21-cardiology-pattern…` — Verify sheets live

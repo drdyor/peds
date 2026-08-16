@@ -1,6 +1,6 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, ClipboardCopy, Command, FileText, Flag, GraduationCap, Images, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, BookMarked, ChevronDown, ClipboardCopy, Command, FileText, Flag, GraduationCap, Images, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
@@ -8,6 +8,8 @@ import { playCue } from "@/lib/sounds";
 import { teachingNotes } from "@/lib/teaching";
 import Markdown from "@/components/Markdown";
 import SheetGallery from "@/components/SheetGallery";
+import ReferenceReader from "@/components/ReferenceReader";
+import { references } from "@/lib/references";
 import { sheets } from "@/lib/sheets";
 
 type Rating = "hard" | "easy";
@@ -161,6 +163,7 @@ export default function Home() {
   const [flags, setFlags] = useState<Record<number, true>>(() => loadFlags());
   const [copied, setCopied] = useState(false);
   const [gallery, setGallery] = useState<number | null>(null);
+  const [reference, setReference] = useState<number | null>(null);
   const cardBodyRef = useRef<HTMLDivElement>(null);
   const [speaking, setSpeaking] = useState(false);
   // Matches the CSS breakpoint for the side-by-side layout. In two columns there is room to
@@ -422,6 +425,7 @@ export default function Home() {
           <div className="shortcut-row"><Command size={15} /><span>Space to reveal</span></div>
           <div className="shortcut-row"><span className="verify-mark">*</span><span>verify against current guidance</span></div>
           <div className="shortcut-row"><span className="keycap">H</span><span>Hard</span><span className="keycap">E</span><span>Easy</span></div>
+          <button className="reading-link" onClick={() => setReference(0)}><BookMarked size={14} /> Reference notes <small>{references.length}</small></button>
           <button className="reading-link" onClick={() => setGallery(0)}><Images size={14} /> Visual Master sheets <small>{sheets.length}</small></button>
           <a className="reading-link" href="lek-last-minute-pediatria.pdf" target="_blank" rel="noreferrer"><BookOpen size={14} /> LEK Last Minute — Pediatria <small>371 pp</small></a>
           <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield addendum 2026 <small>17 pp</small></a>
@@ -519,6 +523,7 @@ export default function Home() {
         </div>
       </section>
       {gallery !== null && <SheetGallery startAt={gallery} onClose={() => setGallery(null)} />}
+      {reference !== null && <ReferenceReader startAt={reference} onClose={() => setReference(null)} />}
     </main>
   );
 }
