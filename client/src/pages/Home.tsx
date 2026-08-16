@@ -5,6 +5,7 @@ import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
 import { playCue } from "@/lib/sounds";
+import { speakChunked } from "@/lib/speech";
 import { teachingNotes } from "@/lib/teaching";
 import Markdown from "@/components/Markdown";
 import SheetGallery from "@/components/SheetGallery";
@@ -126,16 +127,6 @@ function EnumeratedText({ text }: { text: string }) {
         <span className="enum-item" key={item}>{item}</span>
       ))}
     </>
-  );
-}
-
-function pickVoice() {
-  const voices = window.speechSynthesis.getVoices();
-  return (
-    voices.find((v) => /en-GB/i.test(v.lang)) ||
-    voices.find((v) => /^en/i.test(v.lang)) ||
-    voices[0] ||
-    null
   );
 }
 
@@ -266,17 +257,12 @@ export default function Home() {
 
   function speakAnswer(text: string) {
     if (!speechSupported) return;
-    window.speechSynthesis.cancel();
-    const utterance = new SpeechSynthesisUtterance(speakableAnswer(text));
-    const voice = pickVoice();
-    if (voice) utterance.voice = voice;
-    utterance.lang = voice?.lang || "en-GB";
-    utterance.rate = 0.95;
-    utterance.onend = () => setSpeaking(false);
-    utterance.onerror = () => setSpeaking(false);
+    // Chunked: a single long utterance gets silently truncated by several engines, and 39
+    // cards send more than 300 characters (card 5 sends 1,456).
     setSpeaking(true);
-    window.speechSynthesis.speak(utterance);
+    speakChunked(speakableAnswer(text), { rate: 0.95, onDone: () => setSpeaking(false) });
   }
+
 
   function stopSpeaking() {
     if (!speechSupported) return;

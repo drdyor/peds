@@ -27,19 +27,39 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_PDF = ROOT / "client" / "public_assets" / "lek-last-minute-pediatria.pdf"
 DEFAULT_OUT = ROOT / "client" / "public_assets" / "textbook.json"
 
-# Sampled from the file itself; see the module docstring.
-LEVEL_BY_SIZE = {11.2: 1, 9.2: 2, 8.0: 3}
-BODY_SIZE = 7.3
 # Running headers/footers to drop, e.g. "40 | PEDIATRIA"
 CHROME = re.compile(r"^\s*\d+\s*\|\s*PEDIATRIA\s*$|^\s*PEDIATRIA\s*\|\s*\d+\s*$", re.I)
 
 
-def classify(span_size: float, font: str) -> int | None:
-    """Return heading level 1-3, or None for body text."""
-    rounded = round(span_size, 1)
-    for size, level in LEVEL_BY_SIZE.items():
-        if abs(rounded - size) < 0.35 and "Bold" in font:
-            return level
+def measure_body_size(doc) -> float:
+    """The most common font size in the document IS the body text."""
+    sizes: dict[float, int] = {}
+    step = max(1, doc.page_count // 40)
+    for i in range(0, doc.page_count, step):
+        for block in doc[i].get_text("dict")["blocks"]:
+            for line in block.get("lines", []):
+                for span in line["spans"]:
+                    key = round(span["size"], 1)
+                    sizes[key] = sizes.get(key, 0) + 1
+    return max(sizes.items(), key=lambda kv: kv[1])[0]
+
+
+def classify(span_size: float, font: str, body_size: float) -> int | None:
+    """Heading level 1-3 relative to THIS document's body size, or None for body text.
+
+    Sizes were hardcoded to one book's 11.2/9.2/8.0 hierarchy at first. That silently
+    mis-detects every other PDF - it would find no headings at all in a book set slightly
+    larger or smaller - so the thresholds are measured per file instead.
+    """
+    if "Bold" not in font:
+        return None
+    delta = round(span_size, 1) - body_size
+    if delta >= 3.5:
+        return 1
+    if delta >= 1.5:
+        return 2
+    if delta >= 0.4:
+        return 3
     return None
 
 
@@ -50,6 +70,7 @@ def main() -> int:
     args = ap.parse_args()
 
     doc = fitz.open(args.pdf)
+    body_size = measure_body_size(doc)
     sections: list[dict] = []
     current = {"level": 1, "title": "Front matter", "page": 1, "paragraphs": []}
 
@@ -64,7 +85,7 @@ def main() -> int:
                 if not text or CHROME.match(text):
                     continue
                 lead = spans[0]
-                level = classify(lead["size"], lead["font"])
+                level = classify(lead["size"], lead["font"], body_size)
                 if level is not None and len(text) < 120:
                     if current["paragraphs"] or current["title"] != "Front matter":
                         sections.append(current)
@@ -109,6 +130,7 @@ def main() -> int:
     Path(args.out).write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
 
     words = sum(len(" ".join(s["paragraphs"]).split()) for s in payload["sections"])
+    print(f"body font size : {body_size}pt (measured, not assumed)")
     print(f"pages          : {doc.page_count}")
     print(f"sections       : {len(payload['sections'])}")
     print(f"words captured : {words:,}")

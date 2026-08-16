@@ -9,27 +9,10 @@
 // read-aloud works on it too.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Pause, Play, Search, SkipForward, X } from "lucide-react";
+import { chunkForSpeech, pickVoice } from "@/lib/speech";
 
 type Section = { level: number; title: string; page: number; paragraphs: string[] };
 type Book = { title: string; note: string; pages: number; sections: Section[] };
-
-// Long strings get cut off mid-way by several speech engines. Sentence-sized chunks,
-// queued in order, are spoken reliably.
-function chunk(text: string, max = 220): string[] {
-  const sentences = text.replace(/\s+/g, " ").match(/[^.!?;]+[.!?;]*\s*/g) ?? [text];
-  const out: string[] = [];
-  let buffer = "";
-  for (const sentence of sentences) {
-    if ((buffer + sentence).length > max && buffer) {
-      out.push(buffer.trim());
-      buffer = sentence;
-    } else {
-      buffer += sentence;
-    }
-  }
-  if (buffer.trim()) out.push(buffer.trim());
-  return out;
-}
 
 export default function TextbookReader({ onClose }: { onClose: () => void }) {
   const [book, setBook] = useState<Book | null>(null);
@@ -80,9 +63,8 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
   function speakSection(target: Section, thenNext: boolean) {
     if (!speechSupported) return;
     window.speechSynthesis.cancel();
-    const voices = window.speechSynthesis.getVoices();
-    const voice = voices.find((v) => /en-GB/i.test(v.lang)) || voices.find((v) => /^en/i.test(v.lang)) || null;
-    const pieces = chunk([target.title, ...target.paragraphs].join(". "));
+    const voice = pickVoice();
+    const pieces = chunkForSpeech([target.title, ...target.paragraphs].join(". "));
     setSpeaking(true);
     pieces.forEach((piece, i) => {
       const utterance = new SpeechSynthesisUtterance(piece);

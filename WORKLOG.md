@@ -243,3 +243,14 @@ forks is a log nobody reads.
 - ran `cd "C:/Users/Forre/peds" && npx vite build 2>&1|grep -E "built in|error"; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-443…` — Rebuild and re-verify
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "In-app textbook reader, because r…` — Commit and deploy the textbook reader
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; curl -s -o /dev/null -w "textbook.json: %{h…` — Verify the reader live
+- ran `cd "C:/Users/Forre/peds/client/public_assets" && python - <<'PY' import sys,fitz sys.stdout.reconfigure(encoding="utf-8") d=fitz.open("lek-last-minute…` — Check whether PDF fonts have ToUnicode maps
+- ran `cd "C:/Users/Forre/peds/client/public_assets" && python - <<'PY' import sys,fitz,os sys.stdout.reconfigure(encoding="utf-8") for f in ["lek-last-minut…` — Compare text layers of both PDFs
+- wrote `build_reading_html.py` — `C:\Users\Forre\peds\tools\build_reading_html.py`
+- ran `cd "C:/Users/Forre/peds" && py -3.13 tools/build_reading_html.py client/public_assets/lek-last-minute-pediatria.pdf client/public_assets/textbook.html…` — Generate readable HTML for both PDFs
+- edited `build_reading_html.py` — `C:\Users\Forre\peds\tools\build_reading_html.py`
+- ran `cd "C:/Users/Forre/peds" && py -3.13 tools/build_reading_html.py client/public_assets/lek-last-minute-pediatria.pdf client/public_assets/textbook.html…` — Regenerate HTML with fixed headings
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Link HTML editions and build
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4189 --bind 127.0.0.1` — Serve build with HTML editions
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_html.js" <<'JS' …` — Verify HTML editions expose readable text
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Plain HTML editions of both PDFs,…` — Commit and deploy HTML editions
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; for f in textbook.html high-yield-2026.html lek-last-minute-pediatria.pdf pediatrics-high-yield…` — Verify HTML editions live
