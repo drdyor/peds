@@ -430,7 +430,9 @@ export default function Home() {
           <button className="reading-link" onClick={() => setReference(0)}><BookMarked size={14} /> Reference notes <small>{references.length}</small></button>
           <button className="reading-link" onClick={() => setGallery(0)}><Images size={14} /> Visual Master sheets <small>{sheets.length}</small></button>
           <button className="reading-link" onClick={() => setTextbook(true)}><BookOpen size={14} /> Read the textbook <small>371 pp · read-aloud</small></button>
-          <a className="reading-link subtle" href="lek-last-minute-pediatria.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> the same book as a PDF</a>
+          <a className="reading-link subtle" href="textbook.html" target="_blank" rel="noreferrer"><FileText size={14} /> textbook as a web page <small>read-aloud</small></a>
+          <a className="reading-link subtle" href="high-yield-2026.html" target="_blank" rel="noreferrer"><FileText size={14} /> high-yield addendum as a web page</a>
+          <a className="reading-link subtle" href="lek-last-minute-pediatria.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> original PDFs</a>
           <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield addendum 2026 <small>17 pp</small></a>
           {counts.flagged > 0 && <button className="reading-link copy-flagged" onClick={copyFlagged}><ClipboardCopy size={14} /> {copied ? "Copied!" : `Copy ${counts.flagged} flagged card number${counts.flagged === 1 ? "" : "s"}`}</button>}
           <button className="reset-button" onClick={resetProgress}><RotateCcw size={14} /> Reset progress</button>

@@ -228,3 +228,18 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_all.js" <<'JS' c…` — Verify new sheets and schedules note
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Ten more Visual Master sheets; sc…` — Commit and deploy sheets and schedules
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in sheets/sheet-34-karyotypes-syndrom…` — Verify everything live
+- ran `cd "/c/Users/Forre/peds/client/public_assets" && python - <<'PY' import sys,fitz sys.stdout.reconfigure(encoding="utf-8") d=fitz.open("lek-last-minute…` — Inspect the PDF text layer quality
+- ran `cd "/c/Users/Forre/peds/client/public_assets" && python - <<'PY' import sys,fitz,re,collections sys.stdout.reconfigure(encoding="utf-8") d=fitz.open("…` — Check heading detection and source defects
+- wrote `build_textbook.py` — `C:\Users\Forre\peds\tools\build_textbook.py`
+- ran `cd "C:/Users/Forre/peds" && py -3.13 tools/build_textbook.py 2>&1 | tail -8` — Build the structured textbook JSON
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,fitz,re sys.stdout.reconfigure(encoding="utf-8") d=fitz.open("client/public_assets/lek-las…` — Measure text capture rate
+- wrote `TextbookReader.tsx` — `C:\Users\Forre\peds\client\src\components\TextbookReader.tsx`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Wire textbook reader and styles
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4188 --bind 127.0.0.1` — Serve build with textbook reader
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_book.js" <<'JS' …` — Verify textbook reader, search and chunked speech
+- edited `build_textbook.py` — `C:\Users\Forre\peds\tools\build_textbook.py`
+- ran `cd "C:/Users/Forre/peds" && py -3.13 tools/build_textbook.py 2>&1 | tail -6 && python -c " import sys,json;sys.stdout.reconfigure(encoding='utf-8') d=…` — Rebuild textbook JSON with better titles
+- ran `python -c " import sys,re;sys.stdout.reconfigure(encoding='utf-8') S=r'C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-a267…` — Verify rickets coverage in the raw PDF
+- ran `cd "C:/Users/Forre/peds" && npx vite build 2>&1|grep -E "built in|error"; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-443…` — Rebuild and re-verify
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "In-app textbook reader, because r…` — Commit and deploy the textbook reader
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; curl -s -o /dev/null -w "textbook.json: %{h…` — Verify the reader live
