@@ -209,3 +209,22 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_pl.js" <<'JS' co…` — Verify Poland section renders with all facts
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Ground the development note in th…` — Commit and deploy Poland-grounded note
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify Poland section live
+- ran `cd "/c/Users/Forre/Downloads" && ls -lt *.png *.jpg *.jpeg *.webp 2>/dev/null | head -40 | awk '{print $6,$7,$8,$5,$9}'` — List newest image files in Downloads
+- ran `cd "/c/Users/Forre/Downloads" && python -c " import sys,os,glob,time;sys.stdout.reconfigure(encoding='utf-8') files=[f for f in glob.glob('*.png') if …` — List the new image batch with full names
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,glob,os,time sys.stdout.reconfigure(encoding="utf-8") from PIL import Image files=[f for f…` — Build header montage for the new batch
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,glob sys.stdout.reconfigure(encoding="utf-8") from PIL import Image files=sorted([f for f …` — Montage of only the new sheets
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,glob,os,time,re sys.stdout.reconfigure(encoding="utf-8") from PIL import Image # the new d…` — Correctly select the new drop
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,glob,re sys.stdout.reconfigure(encoding="utf-8") from PIL import Image def stamp(f):     m…` — Select new drop by embedded timestamp
+- ran `cd "/c/Users/Forre/Downloads" && python - <<'PY' import sys,os sys.stdout.reconfigure(encoding="utf-8") from PIL import Image OUT=r"C:\Users\Forre\ped…` — Convert the new sheets to WebP
+- edited `sheets.ts` — `C:\Users\Forre\peds\client\src\lib\sheets.ts`
+- ran `python - <<'PY' import sys,fitz,re,glob sys.stdout.reconfigure(encoding="utf-8") p=glob.glob(r"C:\Users\Forre\.claude\projects\C--Users-Forre\b39aa80b…` — Extract the official PSO 2026 text
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Parse the official mandatory schedule by age
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Print the base mandatory schedule cleanly
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Check varicella and HPV status in PSO
+- wrote `reference-schedules.ts` — `C:\Users\Forre\peds\client\src\lib\reference-schedules.ts`
+- edited `references.ts` — `C:\Users\Forre\peds\client\src\lib\references.ts`
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -4; echo "[tsc]"; npx vite build 2>&1|grep -E "built in|error"; ls dist/public/sheets | wc -l; …` — Build with new sheets and schedules note
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4187 --bind 127.0.0.1` — Serve build for verification
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_all.js" <<'JS' c…` — Verify new sheets and schedules note
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Ten more Visual Master sheets; sc…` — Commit and deploy sheets and schedules
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in sheets/sheet-34-karyotypes-syndrom…` — Verify everything live
