@@ -141,4 +141,51 @@ Accompanying problems, with the frequencies the source states:
 | **Castillo-Morales** | Facial and oral muscles - respiratory, speech, tongue, larynx, diaphragm | Oro-facial regulation |
 | **Peto** | Guided teaching in a specialist centre | Functional skills and independence; **not** for infants or severe disability |
 
-> The source's own pearl: **Bobath and Vojta both target motor development but differ in approach** - Bobath emphasises normalisation, Vojta relies on repetition of specific patterns.`;
+> The source's own pearl: **Bobath and Vojta both target motor development but differ in approach** - Bobath emphasises normalisation, Vojta relies on repetition of specific patterns.
+
+### How Poland actually does this - bilanse, screening and which centile charts
+
+*Checked against Polish official sources, not carried over from an Anglophone textbook. Links at the end.*
+
+**Bilans zdrowia** - the free preventive check-ups, done by the GP/paediatrician with the nurse. The ages, as pacjent.gov.pl states them:
+
+| Age | Focus |
+| --- | --- |
+| **1-4 tygodnia** (1-4 weeks) | Newborn assessment |
+| **2-6 miesiecy** (2-6 months) | Early infant development |
+| **9 miesiecy** (9 months) | Mid-first-year |
+| **12 miesiecy** (12 months) | One-year assessment |
+| **2 lata** | Toddler review - **vocabulary is checked here**: roughly 50+ words and joining words into simple phrases |
+| **4 lata** | Preschool |
+| **5 lat** | Pre-school readiness; hearing, vision, posture |
+| **9-10 lat** (class III) | Early school age |
+| **13-14 lat** | Adolescent - **sexual development (Tanner) is formally assessed at this one** |
+| **16-17 lat** | Late adolescent |
+| **to age 19** | Final screening |
+
+> **The trap card 36 is built on:** **patronage visits are NOT bilanse.** The midwife's home visit after discharge and the doctor's early patronage consultation are a separate service from the preventive examinations. That is exactly why card 36's legacy key does not match any offered sequence.
+
+**Newborn screening (badania przesiewowe noworodkow)** - dried blood spot on filter paper, run by IMiD. What was added when is itself testable:
+
+| Condition | In the programme since |
+| --- | --- |
+| **Phenylketonuria / hyperphenylalaninaemia** and **congenital hypothyroidism** | **1994** |
+| **Cystic fibrosis** | 2009 |
+| **21 metabolic diseases by tandem mass spectrometry** | 2014 |
+| **Congenital adrenal hyperplasia** | 2015 |
+| **Biotinidase deficiency** | 2018 |
+| **SMA** | 2021; whole population from **28 March 2022** |
+| **SCID / primary immunodeficiencies** | **pilot from September 2025** |
+
+The Ministry of Health programme covers around **30 conditions** in total. Note how this ties the PKU note together: PKU is not merely "screened" in the abstract, it is one of the two conditions Poland has screened since 1994.
+
+**Centile charts - do not mix them up**
+
+| Age | Chart to use |
+| --- | --- |
+| **0-3 years** (WHO/Palczewska modification is used up to 5) | **WHO growth standards** |
+| **3-18 years** | **OLA / OLAF** - built on a representative sample of Polish children |
+
+Both are the Ministry of Health-recommended references. The distinction matters because WHO charts are a *standard* (how children should grow under optimal conditions) while OLA/OLAF are a *reference* for the actual Polish population - so a child can plot differently on the two.
+
+**Sources for this section:** pacjent.gov.pl (bilans schedule); IMiD Zaklad Badan Przesiewowych (przesiew.imid.med.pl) and the Ministry of Health newborn screening programme 2019-2026; IMiD/Medycyna Praktyczna on WHO vs OLA/OLAF centile charts.`;

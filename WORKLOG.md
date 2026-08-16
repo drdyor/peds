@@ -188,3 +188,16 @@ forks is a log nobody reads.
 - ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; python - <<'PY' p=r"C:\Users\Forre\AppDat…` — Capture the 404 URL
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Reference notes: karyotypes, Ashe…` — Commit and deploy reference notes
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify reference notes live
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C…` — Check developmental milestone coverage
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Extract milestone passages from the textbook
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys,json;sys.stdout.reconfigure(encoding='utf-8') s=open(r'client/src/lib/cards.ts',encoding='utf-8').r…` — Read the development-related cards
+- ran `cd "C:/Users/Forre/peds" && python - <<'PYEOF' import sys, io sys.stdout.reconfigure(encoding="utf-8") path = r"client/src/lib/references.ts" src = op…` — Add development reference note
+- wrote `reference-development.ts` — `C:\Users\Forre\peds\client\src\lib\reference-development.ts`
+- edited `references.ts` — `C:\Users\Forre\peds\client\src\lib\references.ts`
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -4; echo "[tsc]"; npx vite build 2>&1|grep -E "built in|error"; npx vitest run 2>&1|grep -E "Te…` — Type-check, build and test
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4185 --bind 127.0.0.1` — Serve build with development note
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/check_ref.js" http://lo…` — Verify development note renders
+- edited `ReferenceReader.tsx` — `C:\Users\Forre\peds\client\src\components\ReferenceReader.tsx`
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -3; npx vite build 2>&1|grep -E "built in|error"; S="C:/Users/Forre/AppData/Local/Temp/claude/C…` — Rebuild with per-note provenance
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Reference note: motor, speech and…` — Commit and deploy development reference
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify development note live

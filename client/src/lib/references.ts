@@ -18,10 +18,12 @@ export const references: Reference[] = [
     subtitle: "Milestones, red flags, primitive reflexes, Tanner staging in both sexes, cerebral palsy",
     body: developmentNote,
     provenance:
-      "Mixed provenance, and the note says which is which: the cerebral-palsy section at the end is quoted " +
-      "from your LEK Last Minute Pediatria text. The milestone, red-flag, reflex and Tanner tables are written " +
-      "for this deck, because the textbook has no normal-development chart at all - zero mentions of social " +
-      "smile, babbling, pincer grip, sitting unsupported or Tanner. Check the ages against a paediatrics text.",
+      "Mixed provenance, and the note says which is which. The cerebral-palsy section is quoted from your LEK " +
+      "Last Minute Pediatria text. The Poland section — bilans ages, the newborn-screening panel and its dates, " +
+      "and WHO vs OLA/OLAF centile charts — was checked against pacjent.gov.pl, IMiD and the Ministry of Health " +
+      "programme (links at the foot of the note). The milestone, red-flag, reflex and Tanner tables are written " +
+      "for this deck, because the textbook has no normal-development chart at all — zero mentions of social " +
+      "smile, babbling, pincer grip, sitting unsupported or Tanner.",
   },
   {
     id: "karyotypes",
