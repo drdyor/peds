@@ -201,3 +201,11 @@ forks is a log nobody reads.
 - ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -3; npx vite build 2>&1|grep -E "built in|error"; S="C:/Users/Forre/AppData/Local/Temp/claude/C…` — Rebuild with per-note provenance
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Reference note: motor, speech and…` — Commit and deploy development reference
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify development note live
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys,json;sys.stdout.reconfigure(encoding='utf-8') s=open(r'client/src/lib/cards.ts',encoding='utf-8').r…` — Check Polish screening terms in sources
+- edited `reference-development.ts` — `C:\Users\Forre\peds\client\src\lib\reference-development.ts`
+- edited `references.ts` — `C:\Users\Forre\peds\client\src\lib\references.ts`
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -4; echo "[tsc]"; npx vite build 2>&1|grep -E "built in|error"; npx vitest run 2>&1|grep -E "Te…` — Build with Poland section
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4186 --bind 127.0.0.1` — Serve build with Poland section
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_pl.js" <<'JS' co…` — Verify Poland section renders with all facts
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Ground the development note in th…` — Commit and deploy Poland-grounded note
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify Poland section live

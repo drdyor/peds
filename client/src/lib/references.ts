@@ -8,10 +8,22 @@
 // So there was nothing to quote. Verify against a genetics text before relying on detail.
 
 import { developmentNote } from "./reference-development";
+import { schedulesNote } from "./reference-schedules";
 
 export type Reference = { id: string; title: string; subtitle: string; body: string; provenance?: string };
 
 export const references: Reference[] = [
+  {
+    id: "schedules",
+    title: "Schedules — vaccination, bilanse, newborn screening",
+    subtitle: "PSO 2026 mandatory calendar with its traps, and how the three Polish timetables differ",
+    provenance:
+      "Taken from the legal text: Program Szczepień Ochronnych na 2026 rok (Komunikat GIS, Dziennik Urzędowy " +
+      "Ministra Zdrowia 2025 poz. 85), downloaded and parsed directly rather than from a summary page. That " +
+      "mattered — two secondary sources had PCV starting at 5–6 months (it starts at 2) and listed varicella as " +
+      "universally mandatory (it is risk-group only).",
+    body: schedulesNote,
+  },
   {
     id: "development",
     title: "Motor, speech & social development",
