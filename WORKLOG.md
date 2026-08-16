@@ -139,3 +139,20 @@ forks is a log nobody reads.
 - ran `cd "C:/Users/Forre/peds" && python - <<'PY' p=r"client/src/index.css" s=open(p,encoding="utf-8").read() old="  .study-main.has-aside { display: flex; …` — Fix flex direction and re-verify
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Explanations beside the card; mon…` — Commit and deploy layout, note and safety fix
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live layout
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/lib/teaching.ts" s=open(p,encoding="utf…` — Add card 5 ESID teaching note
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Add teaching-notes filter and card badge
+- wrote `audit_drills.py` — `C:\Users\Forre\peds\tools\audit_drills.py`
+- ran `cd "C:/Users/Forre/peds" && py -3.13 tools/audit_drills.py "C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad12…` — Run the drill audit
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys;sys.stdout.reconfigure(encoding='utf-8') for i,l in enumerate(open('DRILL_AUDIT.md',encoding='utf-8…` — Read the audit findings
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys,json;sys.stdout.reconfigure(encoding='utf-8') s=open(r'client/src/lib/cards.ts',encoding='utf-8').r…` — Inspect the flagged cards in full
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/lib/cards.ts" s=open(p,encoding="u…` — Fix card 540 and refine the audit
+- ran `cd "C:/Users/Forre/peds" && grep -E "^\| (HIGH|REVIEW)" DRILL_AUDIT.md | cut -c1-130` — List current audit findings
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") s='"2 ml/kg, then 8\u201315 mg/kg/min" \u2013 use t…` — Debug why 539 still flags
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' p=r"tools\audit_drills.py" s=open(p,encoding="utf-8").read() old="""    for card in drills:         back =…` — Exclude correction notes and re-run audit
+- ran `cd "C:/Users/Forre/peds" && grep -n "purpose" tools/audit_drills.py | cat -A | sed 's/\$$//' | cut -c1-160` — Inspect the purpose-clause line as written
+- edited `audit_drills.py` — `C:\Users\Forre\peds\tools\audit_drills.py`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"tools\audit_drills.py" lines=open(p,encoding="utf-…` — Fix regex and re-run audit
+- ran `cd "C:/Users/Forre/peds" && npx tsc --noEmit 2>&1|head -3; npx vite build 2>&1|grep -E "built in|error"; npx vitest run 2>&1|grep -E "Tests "; python …` — Build, test and confirm corrected cards
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Audit all 473 drills for inverted…` — Commit and deploy audit plus fixes
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; B=$(curl -s $U/ | grep -o 'assets/index-[A-…` — Verify live bundle contains all additions
+- ran `U="https://peds-drdyors-projects.vercel.app"; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchp…` — Verify live bundle contents correctly

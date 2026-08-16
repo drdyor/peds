@@ -149,7 +149,12 @@ export default function Home() {
   const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean; speech: boolean }>(() => loadFeedback());
   const cardBodyRef = useRef<HTMLDivElement>(null);
   const [speaking, setSpeaking] = useState(false);
-  const [showDoctorNote, setShowDoctorNote] = useState(false);
+  // Matches the CSS breakpoint for the side-by-side layout. In two columns there is room to
+  // show the doctors' explanation immediately; making Eva click to open it made reading the
+  // explanation "an effort", which is exactly what the side panel was meant to remove.
+  const WIDE = "(min-width: 1180px)";
+  const [wide, setWide] = useState(() => typeof window !== "undefined" && window.matchMedia(WIDE).matches);
+  const [showDoctorNote, setShowDoctorNote] = useState(wide);
   const speechSupported = typeof window !== "undefined" && "speechSynthesis" in window;
   const [overflowing, setOverflowing] = useState(false);
 
@@ -199,6 +204,13 @@ export default function Home() {
   }, [feedback]);
 
   useEffect(() => {
+    const query = window.matchMedia(WIDE);
+    const sync = (event: MediaQueryListEvent) => { setWide(event.matches); setShowDoctorNote(event.matches); };
+    query.addEventListener("change", sync);
+    return () => query.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
     setIndex(0);
     setRevealed(false);
   }, [filter, topicFilter]);
@@ -213,11 +225,11 @@ export default function Home() {
     // Always start a card at its question — revealing must never leave the stem scrolled
     // off the top of the card.
     if (cardBodyRef.current) cardBodyRef.current.scrollTop = 0;
-    setShowDoctorNote(false);
+    setShowDoctorNote(wide);
     measure();
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [revealed, index, filter, topicFilter]);
+  }, [revealed, index, filter, topicFilter, wide]);
 
 
 
