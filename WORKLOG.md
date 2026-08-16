@@ -156,3 +156,13 @@ forks is a log nobody reads.
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Audit all 473 drills for inverted…` — Commit and deploy audit plus fixes
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; B=$(curl -s $U/ | grep -o 'assets/index-[A-…` — Verify live bundle contains all additions
 - ran `U="https://peds-drdyors-projects.vercel.app"; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchp…` — Verify live bundle contents correctly
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_effort.js" <<'JS' const p…` — Check how much effort seeing the explanation takes
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Open doctors note by default in wide layout
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4181 --bind 127.0.0.1` — Serve build for effort check
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; node "$S/check_effort.js" http:/…` — Verify zero-click explanation
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Open the doctors' explanation by …` — Commit and deploy zero-click explanations
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Add flag control, queue and copy-list
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4182 --bind 127.0.0.1` — Serve build with flag feature
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_flag.js" <<'JS' …` — Verify flagging, persistence, queue and copy
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Flag cards that are explained poo…` — Commit and deploy flagging
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify both features live

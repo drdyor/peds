@@ -306,3 +306,22 @@ button { font: inherit; }
 .flag-button:hover { color: #e06759; border-color: #f0bdb4; transform: translateY(-1px); }
 .flag-button.is-flagged { color: #fffaf0; background: #e06759; border-color: #e06759; }
 .copy-flagged { border: 0; padding: 0; background: transparent; cursor: pointer; }
+
+/* Visual Master sheet viewer */
+.gallery { position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; background: rgba(24,22,18,.93); backdrop-filter: blur(6px); color: #fffaf0; }
+.gallery-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 22px; border-bottom: 1px solid rgba(255,250,240,.14); }
+.gallery-bar .eyebrow { color: rgba(255,250,240,.6); margin: 0 0 3px; }
+.gallery-bar h2 { margin: 0; font-family: Fraunces, Georgia, serif; font-size: 20px; font-weight: 500; letter-spacing: -.02em; }
+.gallery-actions { display: flex; gap: 8px; }
+.gallery-actions button { display: grid; place-items: center; width: 36px; height: 36px; border: 1px solid rgba(255,250,240,.2); border-radius: 9px; background: transparent; color: #fffaf0; transition: background 150ms ease-out; }
+.gallery-actions button:hover { background: rgba(255,250,240,.14); }
+.gallery-stage { flex: 1 1 auto; min-height: 0; display: grid; place-items: center; padding: 16px; overflow: auto; cursor: zoom-in; }
+.gallery-stage img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; background: #fff; box-shadow: 0 24px 60px rgba(0,0,0,.45); }
+.gallery-stage.is-zoomed { cursor: zoom-out; place-items: start center; }
+.gallery-stage.is-zoomed img { max-width: none; max-height: none; width: min(1600px, 160%); }
+.gallery-nav { display: flex; align-items: center; gap: 10px; padding: 12px 18px 16px; border-top: 1px solid rgba(255,250,240,.14); }
+.gallery-nav > button { display: grid; place-items: center; width: 38px; height: 38px; flex: none; border: 1px solid rgba(255,250,240,.2); border-radius: 9px; background: transparent; color: #fffaf0; }
+.gallery-nav > button:hover { background: rgba(255,250,240,.14); }
+.gallery-strip { flex: 1 1 auto; display: flex; gap: 6px; overflow-x: auto; justify-content: center; }
+.gallery-strip button { min-width: 42px; height: 34px; padding: 0 10px; border: 1px solid rgba(255,250,240,.2); border-radius: 8px; background: transparent; color: rgba(255,250,240,.75); font-size: 12px; font-weight: 800; }
+.gallery-strip button.active { background: #fffaf0; color: #17244b; border-color: #fffaf0; }
