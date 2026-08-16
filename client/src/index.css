@@ -259,3 +259,25 @@ button { font: inherit; }
 .doctor-note-source { color: #8b8f9e !important; font-size: 11px !important; font-style: italic; margin-bottom: 0 !important; }
 @media (max-width: 760px) { .doctor-note-stat { display: none; } }
 .reading-link small { color: #a9a5b3; font-size: 10px; font-weight: 700; margin-left: 2px; }
+
+/* Eva's own teaching notes, rendered from markdown. Deliberately reads like a textbook page
+   rather than a flashcard: this is the "sit and understand it" layer. */
+.teaching-note { margin-top: 16px; border-top: 1px dashed #e0d8c8; padding-top: 14px; }
+.teaching-label { color: #1647e8; margin-bottom: 6px; }
+.md { color: #333a52; font-size: clamp(15px, 1.05vw, 16.5px); line-height: 1.6; }
+.md h3 { font-family: Fraunces, Georgia, serif; font-size: 1.35em; line-height: 1.15; letter-spacing: -.02em; color: #17244b; margin: 18px 0 8px; font-weight: 600; }
+.md h4 { font-size: 1.05em; color: #1647e8; margin: 16px 0 6px; letter-spacing: .01em; }
+.md h5 { font-size: .95em; color: #4b5570; margin: 14px 0 6px; }
+.md p { margin: 0 0 10px; }
+.md strong { color: #17244b; }
+.md code { background: #f1ece1; border-radius: 4px; padding: 1px 5px; font-size: .92em; }
+.md ul, .md ol { margin: 0 0 12px; padding-left: 22px; }
+.md li { margin: 4px 0; }
+.md hr { border: 0; border-top: 1px solid #e8e0d2; margin: 16px 0; }
+.md blockquote { margin: 8px 0; padding: 8px 14px; border-left: 3px solid var(--card-accent); background: color-mix(in srgb, var(--card-wash) 60%, white); border-radius: 0 8px 8px 0; }
+.md blockquote p { margin: 0; }
+.md-table-wrap { overflow-x: auto; margin: 4px 0 14px; }
+.md table { border-collapse: collapse; width: 100%; font-size: .95em; }
+.md th, .md td { border: 1px solid #e2d9c9; padding: 8px 11px; text-align: left; vertical-align: top; }
+.md th { background: rgba(22,71,232,.06); color: #17244b; font-weight: 800; font-size: .88em; text-transform: uppercase; letter-spacing: .06em; }
+.md tbody tr:nth-child(even) td { background: rgba(255,250,240,.6); }

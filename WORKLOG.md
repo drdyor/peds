@@ -103,3 +103,19 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_sound.js" <<'JS'…` — Verify distinct sound cues fire
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Cat and bubble sound cues; put th…` — Commit and deploy sounds and reading material
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in lek-last-minute-pediatria.pdf pedi…` — Verify live PDFs and sounds
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") s=open(r"client/src/lib/cards.ts",encoding="ut…` — Pull card 8 data and doctors note
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,csv,re,difflib sys.stdout.reconfigure(encoding="utf-8") s=open(r"client/src/lib/cards.ts",…` — Quantify doctors-note misalignment
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") s=open(r"client/src/lib/cards.ts",encoding="ut…` — Measure topical consistency of every doctor note
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json sys.stdout.reconfigure(encoding="utf-8") d=json.load(op…` — Inspect the key proposals evidence file
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json sys.stdout.reconfigure(encoding="utf-8") d=json.load(op…` — Read accepted vs review pairings and their scores
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json,ast sys.stdout.reconfigure(encoding="utf-8") d=json.loa…` — Inspect the accepted pairing for question 8
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json,ast,collections sys.stdout.reconfigure(encoding="utf-8"…` — Quantify unreliable accepted pairings
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json,ast,collections sys.stdout.reconfigure(encoding="utf-8"…` — Debug match-string parsing
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json,re,collections sys.stdout.reconfigure(encoding="utf-8")…` — Quantify risky accepted pairings correctly
+- ran `cd "/c/Users/Forre/Desktop/LEK_pediatrics_audit_2026-08-09" && python - <<'PY' import sys,json,re,collections sys.stdout.reconfigure(encoding="utf-8")…` — Correctly quantify risky pairings
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C…` — Rebuild explanations from the evidence file with gating
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Show Konsylium source stem in UI
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4178 --bind 127.0.0.1` — Serve corrected build
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; echo "=== card 8 (bad note must …` — Verify card 8 note removed and card 2 intact
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Fix wrong doctors' explanations: …` — Commit and deploy the correction
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify fix is live

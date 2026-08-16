@@ -1,10 +1,12 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, Command, FileText, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, Command, FileText, GraduationCap, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
 import { playCue } from "@/lib/sounds";
+import { teachingNotes } from "@/lib/teaching";
+import Markdown from "@/components/Markdown";
 
 type Rating = "hard" | "easy";
 type ValidationState = "verified" | "needs-review" | "rejected";
@@ -268,6 +270,7 @@ export default function Home() {
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
   const answer = answerParts(card, Boolean(question));
   const doctorNote = doctorNotes[card.id];
+  const teaching = teachingNotes[card.id];
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
 
   // Speak the answer when it becomes visible, if the reader is switched on. Any card change
@@ -407,6 +410,10 @@ export default function Home() {
                     </div>
                   );
                 })}
+              </div>}
+              {teaching && <div className="teaching-note">
+                <div className="prompt-label teaching-label"><GraduationCap size={16} /> Teaching note</div>
+                <Markdown source={teaching} />
               </div>}
               {doctorNote && <div className={`doctor-note ${showDoctorNote ? "is-open" : ""}`}>
                 <button className="doctor-note-toggle" onClick={(event) => { event.stopPropagation(); const opening = !showDoctorNote; setShowDoctorNote(opening); if (opening) window.setTimeout(() => event.currentTarget?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }} aria-expanded={showDoctorNote}>
