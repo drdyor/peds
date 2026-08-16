@@ -1,6 +1,6 @@
 // Clinical Notebook / Editorial Study Desk: warm paper, cobalt ink, coral review annotations.
 import { useEffect, useMemo, useRef, useState } from "react";
-import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, Command, FileText, GraduationCap, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
+import { BookOpen, Check, CheckCircle2, ChevronLeft, ChevronRight, CircleAlert, CircleHelp, ChevronDown, ClipboardCopy, Command, FileText, Flag, GraduationCap, Headphones, ListChecks, ListFilter, RotateCcw, Play, Sparkles, Square, Star, Target, Volume2, VolumeX, Vibrate, X } from "lucide-react";
 import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
@@ -15,8 +15,9 @@ type ValidationMap = Record<number, ValidationState>;
 const STORAGE_KEY = "pediatrics-flashcards-progress-v1";
 const VALIDATION_KEY = "pediatrics-flashcards-validation-v1";
 const FEEDBACK_KEY = "pediatrics-flashcards-feedback-v1";
+const FLAG_KEY = "pediatrics-flashcards-flags-v1";
 
-type Filter = "all" | "new" | "hard" | "easy" | "updates" | "numbers" | "pharma" | "traps" | "source" | "validation" | "teaching";
+type Filter = "all" | "new" | "hard" | "easy" | "updates" | "numbers" | "pharma" | "traps" | "source" | "validation" | "teaching" | "flagged";
 const PALETTES = ["peach", "mint", "lavender", "sky", "butter"] as const;
 const CATEGORY_LABELS: Record<string, string> = { numbers: "Number drill", pharma: "Pharma lab", traps: "Trap radar", signs_scores: "Sign spotlight", source: "Source trail" };
 
@@ -31,6 +32,14 @@ function loadProgress(): ReviewState {
 function loadValidation(): ValidationMap {
   try {
     return JSON.parse(localStorage.getItem(VALIDATION_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function loadFlags(): Record<number, true> {
+  try {
+    return JSON.parse(localStorage.getItem(FLAG_KEY) || "{}");
   } catch {
     return {};
   }
@@ -147,6 +156,8 @@ export default function Home() {
   const [notice, setNotice] = useState("");
   const [sessionReviewed, setSessionReviewed] = useState(0);
   const [feedback, setFeedback] = useState<{ sound: boolean; haptics: boolean; speech: boolean }>(() => loadFeedback());
+  const [flags, setFlags] = useState<Record<number, true>>(() => loadFlags());
+  const [copied, setCopied] = useState(false);
   const cardBodyRef = useRef<HTMLDivElement>(null);
   const [speaking, setSpeaking] = useState(false);
   // Matches the CSS breakpoint for the side-by-side layout. In two columns there is room to
@@ -171,8 +182,9 @@ export default function Home() {
       traps: flashcards.filter((card) => card.category === "traps" || card.category === "signs_scores").length,
       source: flashcards.filter((card) => card.status === "source-derived").length,
       teaching: flashcards.filter((card) => teachingNotes[card.id]).length,
+      flagged: Object.keys(flags).length,
     };
-  }, [progress, validation]);
+  }, [progress, validation, flags]);
 
   const topics = useMemo(() => Array.from(new Set(flashcards.map((card) => card.topic).filter(Boolean))).sort() as string[], []);
   const deck = useMemo(() => {
@@ -187,9 +199,10 @@ export default function Home() {
     if (filter === "traps") return scoped.filter((card) => card.category === "traps" || card.category === "signs_scores");
     if (filter === "source") return scoped.filter((card) => card.status === "source-derived");
     if (filter === "teaching") return scoped.filter((card) => teachingNotes[card.id]);
+    if (filter === "flagged") return scoped.filter((card) => flags[card.id]);
     if (filter === "validation") return scoped.filter((card) => card.status === "source-derived" && validation[card.id] !== "verified");
     return scoped;
-  }, [filter, progress, topicFilter, validation]);
+  }, [filter, progress, topicFilter, validation, flags]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
@@ -202,6 +215,10 @@ export default function Home() {
   useEffect(() => {
     localStorage.setItem(FEEDBACK_KEY, JSON.stringify(feedback));
   }, [feedback]);
+
+  useEffect(() => {
+    localStorage.setItem(FLAG_KEY, JSON.stringify(flags));
+  }, [flags]);
 
   useEffect(() => {
     const query = window.matchMedia(WIDE);
@@ -257,6 +274,30 @@ export default function Home() {
     if (!speechSupported) return;
     window.speechSynthesis.cancel();
     setSpeaking(false);
+  }
+
+  function toggleFlag() {
+    setFlags((current) => {
+      const next = { ...current };
+      if (next[card.id]) delete next[card.id];
+      else next[card.id] = true;
+      return next;
+    });
+    setNotice(flags[card.id] ? "Flag removed." : "Flagged — needs a better explanation.");
+    window.setTimeout(() => setNotice(""), 1600);
+    if (feedback.haptics && "vibrate" in navigator) navigator.vibrate(10);
+  }
+
+  async function copyFlagged() {
+    const ids = Object.keys(flags).map(Number).sort((a, b) => a - b);
+    try {
+      await navigator.clipboard.writeText(ids.join(", "));
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 1800);
+    } catch {
+      setNotice("Could not reach the clipboard — the numbers are: " + ids.join(", "));
+      window.setTimeout(() => setNotice(""), 6000);
+    }
   }
 
   function toggleFeedback(key: "sound" | "haptics" | "speech", event?: React.MouseEvent<HTMLButtonElement>) {
@@ -349,6 +390,7 @@ export default function Home() {
     { key: "source", label: "Source drills", count: counts.source },
     { key: "validation", label: "Needs validation", count: counts.needsValidation },
     { key: "teaching", label: "Teaching notes", count: counts.teaching },
+    { key: "flagged", label: "Needs better material", count: counts.flagged },
   ];
 
   return (
@@ -379,6 +421,7 @@ export default function Home() {
           <div className="shortcut-row"><span className="keycap">H</span><span>Hard</span><span className="keycap">E</span><span>Easy</span></div>
           <a className="reading-link" href="lek-last-minute-pediatria.pdf" target="_blank" rel="noreferrer"><BookOpen size={14} /> LEK Last Minute — Pediatria <small>371 pp</small></a>
           <a className="reading-link" href="pediatrics-high-yield-2026.pdf" target="_blank" rel="noreferrer"><FileText size={14} /> High-yield addendum 2026 <small>17 pp</small></a>
+          {counts.flagged > 0 && <button className="reading-link copy-flagged" onClick={copyFlagged}><ClipboardCopy size={14} /> {copied ? "Copied!" : `Copy ${counts.flagged} flagged card number${counts.flagged === 1 ? "" : "s"}`}</button>}
           <button className="reset-button" onClick={resetProgress}><RotateCcw size={14} /> Reset progress</button>
         </div>
       </aside>
@@ -408,7 +451,7 @@ export default function Home() {
 
         <div className={`study-main ${revealed && (teaching || doctorNote) ? "has-aside" : ""}`}>
           <div className={`flashcard ${revealed ? "is-revealed" : ""} ${overflowing ? "has-overflow" : ""} palette-${palette}`} onClick={() => setRevealed((current) => { giveFeedback("reveal"); return !current; })} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setRevealed((current) => !current); }}>
-            <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span>{teaching && <span className="has-teaching" title="This card has a teaching note"><GraduationCap size={12} /> note</span>}<span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
+            <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span><button className={`flag-button ${flags[card.id] ? "is-flagged" : ""}`} onClick={(event) => { event.stopPropagation(); toggleFlag(); event.currentTarget.blur(); }} aria-pressed={Boolean(flags[card.id])} title={flags[card.id] ? "Flagged as needing better material — click to unflag" : "Flag this card: explained poorly / needs more material"}><Flag size={13} /></button>{teaching && <span className="has-teaching" title="This card has a teaching note"><GraduationCap size={12} /> note</span>}<span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
             <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
               <p className={`card-question ${splitEnumerated(card.front).items.length ? "has-enum" : ""}`}><EnumeratedText text={card.front} /></p>
