@@ -91,3 +91,15 @@ forks is a log nobody reads.
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live production
 - ran `python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\.claude\projects\C--Users-Forre\memory\project_peds_flashcards_…` — Record explanation source findings in memory
 - ran `cd "C:/Users/Forre/peds" && python -c " import sys,json,re;sys.stdout.reconfigure(encoding='utf-8') o=open(r'client/src/lib/explanations.ts',encoding=…` — Verify doctor-note counts and live bundle
+- ran `U="https://peds-drdyors-projects.vercel.app"; echo "=== PDFs served ==="; for f in pediatrics-high-yield-2026.pdf; do echo -n "$f -> "; curl -s -o /de…` — Verify what PDFs are live on the site
+- ran `cd "C:/Users/Forre/peds" && T="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad/sa"; git show o…` — Compare available reading PDFs
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Probe textbook for card 7 topic
+- ran `echo "=== konsylium peds ==="; ls -la /c/Users/Forre/medical_translations_db/deploy/pediatrics_konsylium_questions.html 2>/dev/null | awk '{print $5,$…` — Locate Konsylium and Eva's own peds notes
+- ran `cd /c/Users/Forre/medical_translations_db && for f in deploy/pediatrics_konsylium_questions.html deploy/lek_last_minute_pediatria/study.html deploy/pe…` — Check which peds sources cover card 7 topic
+- ran `P="C:/Users/Forre/peds"; cp "/c/Users/Forre/Downloads/Telegram Desktop/last min peds given to manus.pdf" "$P/client/public_assets/lek-last-minute-pedi…` — Add the 371pp textbook to shipped assets
+- wrote `sounds.ts` — `C:\Users\Forre\peds\client\src\lib\sounds.ts`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") p=r"C:\Users\Forre\peds\client\src\pages\Home.tsx" …` — Wire cue sounds and both reading links
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4177 --bind 127.0.0.1` — Serve build for sound verification
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_sound.js" <<'JS'…` — Verify distinct sound cues fire
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Cat and bubble sound cues; put th…` — Commit and deploy sounds and reading material
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in lek-last-minute-pediatria.pdf pedi…` — Verify live PDFs and sounds

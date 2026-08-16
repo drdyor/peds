@@ -418,7 +418,7 @@ export default function Home() {
                 </button>
                 {showDoctorNote && <div className="doctor-note-body">
                   {doctorNote.text.split("\n").map((para) => para.trim()).filter(Boolean).map((para) => <p key={para}>{para}</p>)}
-                  <p className="doctor-note-source">Konsylium doctors&rsquo; explanation, from your LEK pediatrics audit bundle{/some Polish/i.test(doctorNote.language) ? " · some Polish left in the original" : ""}.</p>
+                  <p className="doctor-note-source">Konsylium doctors&rsquo; explanation{doctorNote.topic ? ` · ${doctorNote.topic}` : ""}. Matched to Konsylium question: &ldquo;{doctorNote.konsyliumStem}&rdquo; &mdash; if that is not this question, the pairing is wrong; tell Claude.</p>
                 </div>}
               </div>}</>}
             </div>
