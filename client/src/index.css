@@ -298,3 +298,4 @@ button { font: inherit; }
 /* Stacked fallback (and narrow screens): keep the previous look. */
 .study-main { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
 .study-aside { min-width: 0; }
+.has-teaching { display: inline-flex; align-items: center; gap: 4px; margin-right: 8px; padding: 3px 8px; border-radius: 99px; background: rgba(22,71,232,.09); color: #1647e8; font-size: 9.5px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }

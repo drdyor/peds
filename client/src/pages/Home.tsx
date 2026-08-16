@@ -16,7 +16,7 @@ const STORAGE_KEY = "pediatrics-flashcards-progress-v1";
 const VALIDATION_KEY = "pediatrics-flashcards-validation-v1";
 const FEEDBACK_KEY = "pediatrics-flashcards-feedback-v1";
 
-type Filter = "all" | "new" | "hard" | "easy" | "updates" | "numbers" | "pharma" | "traps" | "source" | "validation";
+type Filter = "all" | "new" | "hard" | "easy" | "updates" | "numbers" | "pharma" | "traps" | "source" | "validation" | "teaching";
 const PALETTES = ["peach", "mint", "lavender", "sky", "butter"] as const;
 const CATEGORY_LABELS: Record<string, string> = { numbers: "Number drill", pharma: "Pharma lab", traps: "Trap radar", signs_scores: "Sign spotlight", source: "Source trail" };
 
@@ -165,6 +165,7 @@ export default function Home() {
       pharma: flashcards.filter((card) => card.category === "pharma").length,
       traps: flashcards.filter((card) => card.category === "traps" || card.category === "signs_scores").length,
       source: flashcards.filter((card) => card.status === "source-derived").length,
+      teaching: flashcards.filter((card) => teachingNotes[card.id]).length,
     };
   }, [progress, validation]);
 
@@ -180,6 +181,7 @@ export default function Home() {
     if (filter === "pharma") return scoped.filter((card) => card.category === "pharma");
     if (filter === "traps") return scoped.filter((card) => card.category === "traps" || card.category === "signs_scores");
     if (filter === "source") return scoped.filter((card) => card.status === "source-derived");
+    if (filter === "teaching") return scoped.filter((card) => teachingNotes[card.id]);
     if (filter === "validation") return scoped.filter((card) => card.status === "source-derived" && validation[card.id] !== "verified");
     return scoped;
   }, [filter, progress, topicFilter, validation]);
@@ -334,6 +336,7 @@ export default function Home() {
     { key: "traps", label: "Traps & signs", count: counts.traps },
     { key: "source", label: "Source drills", count: counts.source },
     { key: "validation", label: "Needs validation", count: counts.needsValidation },
+    { key: "teaching", label: "Teaching notes", count: counts.teaching },
   ];
 
   return (
@@ -393,7 +396,7 @@ export default function Home() {
 
         <div className={`study-main ${revealed && (teaching || doctorNote) ? "has-aside" : ""}`}>
           <div className={`flashcard ${revealed ? "is-revealed" : ""} ${overflowing ? "has-overflow" : ""} palette-${palette}`} onClick={() => setRevealed((current) => { giveFeedback("reveal"); return !current; })} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setRevealed((current) => !current); }}>
-            <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span><span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
+            <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span>{teaching && <span className="has-teaching" title="This card has a teaching note"><GraduationCap size={12} /> note</span>}<span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
             <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
               <p className={`card-question ${splitEnumerated(card.front).items.length ? "has-enum" : ""}`}><EnumeratedText text={card.front} /></p>

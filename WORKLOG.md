@@ -126,3 +126,16 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_teach.js" <<'JS'…` — Verify teaching note renders with tables
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Teaching notes: render Eva's own …` — Commit and deploy teaching notes
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify teaching note live
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json,re,collections sys.stdout.reconfigure(encoding="utf-8") s=open(r"client/src/lib/cards.ts",…` — Quantify negated source-drill answers
+- ran `python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") S=r"C:\Users\Forre\AppData\Local\Temp\claude\C--Users-Forre\b39aa80b-f890-4435-…` — Verify the drug doses against the textbook
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,json sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/lib/cards.ts" s=open(p,encoding="u…` — Correct the two inverted drug-dose cards
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/lib/teaching.ts" s=open(p,encoding="utf…` — Add monogenic diabetes teaching note
+- ran `cd "C:/Users/Forre/peds" && grep -n 'className="flashcard\|study-workspace\|workspace-content\|action-row\|teaching-note\|doctor-note ' client/src/pag…` — Locate layout anchors in JSX
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" lines=open(p,encoding="…` — Move explanations into a right-hand aside
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" lines=open(p,encoding="…` — Move aside to be a sibling of the card
+- ran `cd "C:/Users/Forre/peds" && cat >> client/src/index.css <<'CSS'  /* Two-column study view: once the answer is revealed, the explanations sit BESIDE th…` — Add two-column layout CSS
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4180 --bind 127.0.0.1` — Serve two-column build
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_layout.js" <<'JS…` — Verify two-column layout across widths
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' p=r"client/src/index.css" s=open(p,encoding="utf-8").read() old="  .study-main.has-aside { display: flex; …` — Fix flex direction and re-verify
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Explanations beside the card; mon…` — Commit and deploy layout, note and safety fix
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live layout

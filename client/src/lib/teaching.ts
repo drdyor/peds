@@ -6,6 +6,37 @@
 // blockquotes all render; nothing else is needed.
 
 export const teachingNotes: Record<number, string> = {
+  // Card 5 — primary immunodeficiency warning signs. From Eva's ESID paste (2026-08-16),
+  // lifted out of the answer paragraph so it renders as a proper list rather than prose.
+  5: `### ESID / Jeffrey Modell warning signs of primary immunodeficiency
+
+The current list uses **≥ 4 new ear infections in 1 year** as the paediatric red flag — so statement 1 of this question (six acute otitis media in a year) **does** count as a warning sign.
+
+> ⚠️ Older literature sometimes used **≥ 8 ear infections per year**. Know both numbers — the current ESID/JMF figure is **4**.
+
+### The ten warning signs
+
+1. **≥ 4 new ear infections** within 1 year
+2. **≥ 2 serious sinus infections** within 1 year
+3. **≥ 2 months on antibiotics** with little effect
+4. **≥ 2 pneumonias** within 1 year
+5. Failure of an infant to **gain weight or grow normally**
+6. Recurrent **deep skin or organ abscesses**
+7. Persistent **oral thrush** or fungal infection
+8. Need for **IV antibiotics** to clear infections
+9. **≥ 2 deep-seated infections**, including septicaemia
+10. **Family history of PID**
+
+### What this does and does not tell you
+
+Four ear infections **do not diagnose** immunodeficiency. It is a *warning sign* that should prompt consideration — especially alongside pneumonia, poor growth, persistent thrush, unusual organisms, or a need for IV antibiotics.
+
+### For this question specifically
+
+Because any valid combination must include statement 1, **option D (2,3,4,5) can be ruled out**. Statement 6 is truncated in the source PDF, so the full key still cannot be reconstructed — that part is not your misreading, the source is incomplete.
+
+Sources: ESID Clinical Working Party resources; Immunodeficiency UK; PMC3245434.`,
+
   // Card 9 — monogenic diabetes (Wolfram / DEND / MODY). Added 2026-08-16 from Eva's write-up.
   9: `Focus on **age of onset + extra-pancreatic features + gene + treatment**.
 
