@@ -281,3 +281,20 @@ button { font: inherit; }
 .md th, .md td { border: 1px solid #e2d9c9; padding: 8px 11px; text-align: left; vertical-align: top; }
 .md th { background: rgba(22,71,232,.06); color: #17244b; font-weight: 800; font-size: .88em; text-transform: uppercase; letter-spacing: .06em; }
 .md tbody tr:nth-child(even) td { background: rgba(255,250,240,.6); }
+
+/* Two-column study view: once the answer is revealed, the explanations sit BESIDE the card
+   instead of below it, so reading them is not a scroll hunt. Each column scrolls on its own.
+   Below 1180px there is not enough width for two readable columns, so it stacks as before. */
+@media (min-width: 1180px) {
+  .study-main.has-aside { display: flex; flex-direction: row; gap: 20px; align-items: stretch; min-height: 0; flex: 1 1 auto; }
+  .study-main.has-aside > .flashcard { flex: 1 1 56%; min-width: 0; }
+  .study-main.has-aside .study-aside { flex: 1 1 44%; min-width: 0; max-width: 620px; overflow-y: auto; overscroll-behavior: contain; padding: 4px 4px 8px 0; }
+  .study-main.has-aside .study-aside .teaching-note,
+  .study-main.has-aside .study-aside .doctor-note { margin-top: 0; border-top: 0; padding-top: 0; }
+  .study-main.has-aside .study-aside .doctor-note { margin-top: 16px; border-top: 1px dashed #e0d8c8; padding-top: 12px; }
+  /* the workspace can use more width when a second column is in play */
+  .workspace-content:has(.study-main.has-aside) { width: min(1560px, calc(100% - 5vw)); }
+}
+/* Stacked fallback (and narrow screens): keep the previous look. */
+.study-main { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.study-aside { min-width: 0; }

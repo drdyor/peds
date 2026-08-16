@@ -6,6 +6,69 @@
 // blockquotes all render; nothing else is needed.
 
 export const teachingNotes: Record<number, string> = {
+  // Card 9 — monogenic diabetes (Wolfram / DEND / MODY). Added 2026-08-16 from Eva's write-up.
+  9: `Focus on **age of onset + extra-pancreatic features + gene + treatment**.
+
+### 1. Wolfram syndrome = DIDMOAD
+
+**W**olfram → **WFS1** gene → **DIDMOAD**
+
+- **D** = Diabetes **I**nsipidus
+- **D** = Diabetes **M**ellitus
+- **O** = **Optic atrophy**
+- **A** = **Deafness**
+
+Usually **autosomal recessive**, most commonly due to **WFS1** mutations.
+
+**Typical presentation:** a child/teenager develops **diabetes mellitus → optic atrophy → ± DI → ± deafness**. The diabetes is usually **non-autoimmune insulin-deficient diabetes**, so it can initially be mistaken for type 1.
+
+Other possible features: sensorineural deafness; central diabetes insipidus → polyuria/polydipsia; urinary tract abnormalities; neurologic/neuropsychiatric problems.
+
+> **Exam clue:** child with juvenile diabetes + progressive visual loss/optic atrophy = **Wolfram syndrome**.
+
+Mnemonic: **WOLFRAM = "WOW, I can't see/hear and I'm thirsty" → DIDMOAD**
+
+### 2. DEND syndrome
+
+**D**evelopmental delay · **E**pilepsy · **N**eonatal **D**iabetes
+
+Usually due to an activating mutation in **KCNJ11**, encoding the **Kir6.2** subunit of the pancreatic β-cell ATP-sensitive potassium (**KATP**) channel.
+
+**Why the mutation causes diabetes.** Normally: ↑ATP → KATP channel closes → β-cell depolarisation → Ca²⁺ influx → insulin release. With an **activating KCNJ11 mutation**: KATP channel stays open → β-cell stays hyperpolarised → ↓insulin secretion → neonatal diabetes. The same channel matters in the brain, which explains the **developmental delay + epilepsy**.
+
+> **Exam clue:** neonatal diabetes + seizures + developmental delay = **DEND → think KCNJ11**.
+
+**Treatment pearl.** Many patients with KCNJ11-related neonatal diabetes respond dramatically to **sulfonylureas**, which close the KATP channel by a mechanism that bypasses the defective ATP sensing. So: *"baby with permanent neonatal diabetes, developmental delay and epilepsy; KCNJ11 mutation — best treatment?"* → **sulfonylurea**, not automatically lifelong insulin.
+
+### 3. MODY — Maturity-Onset Diabetes of the Young
+
+Monogenic diabetes, usually **autosomal dominant**.
+
+> Young patient + diabetes + strong family history through multiple generations + no obesity/insulin resistance + **negative pancreatic autoantibodies** → think **MODY**.
+
+| Type | Gene | Classic clue | Treatment |
+| --- | --- | --- | --- |
+| **MODY 1** | **HNF4A** | Diabetes + **macrosomia / neonatal hypoglycaemia** | Sulfonylurea |
+| **MODY 2** | **GCK** | **Mild, stable fasting hyperglycaemia** | Usually **none** |
+| **MODY 3** | **HNF1A** | Progressive diabetes + **glycosuria** | **Sulfonylurea** |
+| **MODY 5** | **HNF1B** | Diabetes + **renal cysts / renal abnormalities** | Often insulin |
+
+**MODY 2 — GCK.** Glucokinase is the **glucose sensor of the β-cell**. Mutation → the β-cell has a **higher glucose threshold** for insulin secretion → **mild fasting hyperglycaemia that stays relatively stable**. Usually no treatment outside special circumstances such as pregnancy.
+
+> **Exam clue:** 12-year-old, fasting glucose ~110–140 mg/dL on repeated tests, completely well, no obesity, no progression, parent also has mild hyperglycaemia → **GCK-MODY (MODY 2)**.
+
+### The big comparison
+
+**Wolfram** — diabetes + eyes/ears/DI → **WFS1** → DIDMOAD
+
+**DEND** — neonatal diabetes + brain → **KCNJ11** → developmental delay + epilepsy + neonatal diabetes → often **sulfonylurea-responsive**
+
+**MODY** — young diabetes + dominant family history. Then: **GCK** = mild/stable → no treatment · **HNF1A** = glycosuria → sulfonylurea · **HNF4A** = big baby + neonatal hypoglycaemia → sulfonylurea · **HNF1B** = kidney disease → renal cysts
+
+> **One-line LEK memory trick:** "Wolfram sees/hears, DEND seizes, MODY runs in the family."
+
+Sources: PMC6312113 (monogenic diabetes in children); PubMed 28666500 and 16019717 (DEND / Kir6.2); PMC12690183 (ADA Standards of Care 2026, diagnosis & classification); PMC11854986 (ISPAD 2024).`,
+
   // Card 8 — vesico-ureteral reflux. Added 2026-08-16 from Eva's own write-up.
   // NOTE: the pasted source was truncated mid-sentence at the very end ("= surgeThose
   // absolute statements are what make **3 and 4 false*"). The closing two lines are

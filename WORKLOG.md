@@ -119,3 +119,10 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; echo "=== card 8 (bad note must …` — Verify card 8 note removed and card 2 intact
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Fix wrong doctors' explanations: …` — Commit and deploy the correction
 - ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify fix is live
+- wrote `Markdown.tsx` — `C:\Users\Forre\peds\client\src\components\Markdown.tsx`
+- wrote `teaching.ts` — `C:\Users\Forre\peds\client\src\lib\teaching.ts`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Wire teaching note rendering and styles
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4179 --bind 127.0.0.1` — Serve build with teaching note
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_teach.js" <<'JS'…` — Verify teaching note renders with tables
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Teaching notes: render Eva's own …` — Commit and deploy teaching notes
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify teaching note live

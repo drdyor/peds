@@ -391,6 +391,7 @@ export default function Home() {
             <div className="card-position"><span>{deck.length ? String(index + 1).padStart(3, "0") : "000"}</span><span className="slash">/</span><span>{String(deck.length).padStart(3, "0")}</span></div>
           </div>
 
+        <div className={`study-main ${revealed && (teaching || doctorNote) ? "has-aside" : ""}`}>
           <div className={`flashcard ${revealed ? "is-revealed" : ""} ${overflowing ? "has-overflow" : ""} palette-${palette}`} onClick={() => setRevealed((current) => { giveFeedback("reveal"); return !current; })} role="button" tabIndex={0} onKeyDown={(event) => { if (event.key === "Enter") setRevealed((current) => !current); }}>
             <div className="card-topline"><span className="card-id">CARD {String(card.id).padStart(3, "0")}</span><span className="card-category"><Star size={12} /> {categoryLabel}</span><span className={`source-tag ${card.status}`}>{statusLabel(card, validation[card.id])}</span></div>
             <div className="card-body" ref={cardBodyRef}>
@@ -411,26 +412,30 @@ export default function Home() {
                   );
                 })}
               </div>}
-              {teaching && <div className="teaching-note">
-                <div className="prompt-label teaching-label"><GraduationCap size={16} /> Teaching note</div>
-                <Markdown source={teaching} />
-              </div>}
-              {doctorNote && <div className={`doctor-note ${showDoctorNote ? "is-open" : ""}`}>
-                <button className="doctor-note-toggle" onClick={(event) => { event.stopPropagation(); const opening = !showDoctorNote; setShowDoctorNote(opening); if (opening) window.setTimeout(() => event.currentTarget?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }} aria-expanded={showDoctorNote}>
-                  <ChevronDown size={15} className="doctor-note-chevron" />
-                  <span>Doctors&rsquo; explanation</span>
-                  {doctorNote.consensusPct !== null && doctorNote.doctorsN !== null && (
-                    <span className="doctor-note-stat">{doctorNote.consensusPct}% of {doctorNote.doctorsN.toLocaleString()} doctors chose {doctorNote.key || "the key"}</span>
-                  )}
-                </button>
-                {showDoctorNote && <div className="doctor-note-body">
-                  {doctorNote.text.split("\n").map((para) => para.trim()).filter(Boolean).map((para) => <p key={para}>{para}</p>)}
-                  <p className="doctor-note-source">Konsylium doctors&rsquo; explanation{doctorNote.topic ? ` · ${doctorNote.topic}` : ""}. Matched to Konsylium question: &ldquo;{doctorNote.konsyliumStem}&rdquo; &mdash; if that is not this question, the pairing is wrong; tell Claude.</p>
-                </div>}
-              </div>}</>}
+              </>}
             </div>
             <div className="card-footer"><span>{revealed ? "Answer revealed · nice work" : "Recall first, then reveal"}</span><span className="card-corner"><Sparkles size={17} /></span></div>
           </div>
+          {revealed && (teaching || doctorNote) && <aside className="study-aside">
+            {teaching && <div className="teaching-note">
+            <div className="prompt-label teaching-label"><GraduationCap size={16} /> Teaching note</div>
+            <Markdown source={teaching} />
+            </div>}
+            {doctorNote && <div className={`doctor-note ${showDoctorNote ? "is-open" : ""}`}>
+            <button className="doctor-note-toggle" onClick={(event) => { event.stopPropagation(); const opening = !showDoctorNote; setShowDoctorNote(opening); if (opening) window.setTimeout(() => event.currentTarget?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }} aria-expanded={showDoctorNote}>
+            <ChevronDown size={15} className="doctor-note-chevron" />
+            <span>Doctors&rsquo; explanation</span>
+            {doctorNote.consensusPct !== null && doctorNote.doctorsN !== null && (
+            <span className="doctor-note-stat">{doctorNote.consensusPct}% of {doctorNote.doctorsN.toLocaleString()} doctors chose {doctorNote.key || "the key"}</span>
+            )}
+            </button>
+            {showDoctorNote && <div className="doctor-note-body">
+            {doctorNote.text.split("\n").map((para) => para.trim()).filter(Boolean).map((para) => <p key={para}>{para}</p>)}
+            <p className="doctor-note-source">Konsylium doctors&rsquo; explanation{doctorNote.topic ? ` · ${doctorNote.topic}` : ""}. Matched to Konsylium question: &ldquo;{doctorNote.konsyliumStem}&rdquo; &mdash; if that is not this question, the pairing is wrong; tell Claude.</p>
+            </div>}
+            </div>}
+          </aside>}
+        </div>
 
           <div className="action-row">
             <button className="nav-button" onClick={() => move(-1)} aria-label="Previous card"><ChevronLeft size={19} /></button>
