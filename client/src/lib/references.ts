@@ -7,9 +7,22 @@
 // "Asherman" (checked 2026-08-16), and the doctors' explanations cover none of it either.
 // So there was nothing to quote. Verify against a genetics text before relying on detail.
 
-export type Reference = { id: string; title: string; subtitle: string; body: string };
+import { developmentNote } from "./reference-development";
+
+export type Reference = { id: string; title: string; subtitle: string; body: string; provenance?: string };
 
 export const references: Reference[] = [
+  {
+    id: "development",
+    title: "Motor, speech & social development",
+    subtitle: "Milestones, red flags, primitive reflexes, Tanner staging in both sexes, cerebral palsy",
+    body: developmentNote,
+    provenance:
+      "Mixed provenance, and the note says which is which: the cerebral-palsy section at the end is quoted " +
+      "from your LEK Last Minute Pediatria text. The milestone, red-flag, reflex and Tanner tables are written " +
+      "for this deck, because the textbook has no normal-development chart at all - zero mentions of social " +
+      "smile, babbling, pincer grip, sitting unsupported or Tanner. Check the ages against a paediatrics text.",
+  },
   {
     id: "karyotypes",
     title: "Karyotypes & chromosome patterns",

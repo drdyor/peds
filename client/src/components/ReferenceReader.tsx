@@ -37,9 +37,8 @@ export default function ReferenceReader({ startAt, onClose }: { startAt: number;
         </nav>
         <article className="reference-body">
           <p className="reference-provenance">
-            Written for this deck, not taken from the LEK sources &mdash; the 371-page textbook contains no
-            karyotype, Klinefelter or Asherman material at all, so there was nothing to quote. Check the detail
-            against a genetics text before you rely on it.
+            {note.provenance ??
+              "Written for this deck, not taken from the LEK sources — the 371-page textbook contains no karyotype, Klinefelter or Asherman material at all, so there was nothing to quote. Check the detail against a genetics text before you rely on it."}
           </p>
           <Markdown source={note.body} />
         </article>

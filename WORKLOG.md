@@ -176,3 +176,15 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_gallery.js" <<'J…` — Verify the gallery opens and images load
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Add the Visual Master 2026 sheets…` — Commit and deploy the sheet gallery
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; for f in sheets/sheet-21-cardiology-pattern…` — Verify sheets live
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; python - <<'PY' import sys,json,re sys.st…` — Check sources for karyotype coverage
+- ran `cd "C:/Users/Forre/peds" && python -c " import sys,json;sys.stdout.reconfigure(encoding='utf-8') s=open(r'client/src/lib/cards.ts',encoding='utf-8').r…` — Read existing karyotype-related cards
+- wrote `references.ts` — `C:\Users\Forre\peds\client\src\lib\references.ts`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PYEOF' import sys sys.stdout.reconfigure(encoding="utf-8")  header = '''// Standalone reference notes, opened …` — Write reference notes including PKU and Klippel-Feil
+- wrote `ReferenceReader.tsx` — `C:\Users\Forre\peds\client\src\components\ReferenceReader.tsx`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="utf-…` — Wire reference reader and styles
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4184 --bind 127.0.0.1` — Serve build with references
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_ref.js" <<'JS' c…` — Verify reference notes render
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/find404.js" <<'JS' const path=r…` — Identify the 404 resource
+- ran `S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; python - <<'PY' p=r"C:\Users\Forre\AppDat…` — Capture the 404 URL
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Reference notes: karyotypes, Ashe…` — Commit and deploy reference notes
+- ran `sleep 5; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify reference notes live
