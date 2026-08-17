@@ -39,6 +39,7 @@ h2 { font-size: 1.45rem; line-height: 1.2; margin: 2.4rem 0 .75rem; letter-spaci
      border-top: 1px solid #e5dccb; padding-top: 1.4rem; }
 h3 { font-size: 1.12rem; margin: 1.6rem 0 .5rem; color: #33405f; }
 p { margin: 0 0 .8rem; }
+.time { float: right; font-size: .62rem; letter-spacing: .08em; text-transform: uppercase; color: #a49c8a; font-weight: 700; margin-top: .55rem; }
 .page { color: #a49c8a; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
 nav.toc { background: #fffaf0; border: 1px solid #e5dccb; border-radius: .6rem; padding: 1rem 1.25rem; margin-bottom: 2.5rem; }
 nav.toc p { font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: #8b8471; margin: 0 0 .5rem; }
@@ -50,6 +51,23 @@ nav.toc a:hover { text-decoration: underline; }
        font-size: .9rem; color: #6b5c2a; }
 @media print { body { background: #fff; } nav.toc, .tip { display: none; } }
 """
+
+
+
+def listening_time(words: int, wpm: int = 150) -> str:
+    """Same estimate the app uses: WORDS at 150 wpm, not characters.
+
+    Characters mislead on medical text - "immunodeficiency" and "is a" are nothing alike per
+    second of speech - so both the app and this generator count words.
+    """
+    seconds = round(words / wpm * 60)
+    if seconds < 60:
+        return f"{max(1, seconds)} sec"
+    minutes = round(seconds / 60)
+    if minutes < 60:
+        return f"{minutes} min"
+    hours, rest = divmod(minutes, 60)
+    return f"{hours} hr {rest} min" if rest else f"{hours} hr"
 
 
 def build(pdf_path: Path, out_path: Path, title: str, subtitle: str) -> dict:
@@ -91,6 +109,7 @@ def build(pdf_path: Path, out_path: Path, title: str, subtitle: str) -> dict:
                     if level == 2:
                         anchor = f"s{len(toc) + 1}"
                         toc.append((anchor, text))
+                        parts.append(f"__SECTION_BREAK__{anchor}")
                         parts.append(f'<h2 id="{anchor}">{esc}</h2>')
                     else:
                         parts.append(f"<h3>{esc}</h3>")
@@ -98,6 +117,27 @@ def build(pdf_path: Path, out_path: Path, title: str, subtitle: str) -> dict:
                     parts.append(f"<p>{esc}</p>")
         if page_index % 25 == 0:
             parts.append(f'<p class="page">page {page_index + 1}</p>')
+
+    # Label each section with its listening time, now that we know where the breaks fell.
+    counted: list[str] = []
+    bucket: list[str] = []
+    section_words: dict[str, int] = {}
+    current_anchor = None
+    for part in parts:
+        if part.startswith("__SECTION_BREAK__"):
+            if current_anchor:
+                section_words[current_anchor] = sum(len(re.sub(r"<[^>]+>", " ", b).split()) for b in bucket)
+            current_anchor = part.replace("__SECTION_BREAK__", "")
+            bucket = []
+            continue
+        bucket.append(part)
+        counted.append(part)
+    if current_anchor:
+        section_words[current_anchor] = sum(len(re.sub(r"<[^>]+>", " ", b).split()) for b in bucket)
+    parts = counted
+    for anchor, count in section_words.items():
+        parts = [p.replace(f'<h2 id="{anchor}">', f'<h2 id="{anchor}"><span class="time">{listening_time(count)}</span>')
+                 for p in parts]
 
     toc_html = "".join(f'<li><a href="#{a}">{html.escape(t)}</a></li>' for a, t in toc[:120])
     out = f"""<!doctype html>
@@ -113,6 +153,7 @@ def build(pdf_path: Path, out_path: Path, title: str, subtitle: str) -> dict:
 <header class="doc">
 <h1>{html.escape(title)}</h1>
 <p class="sub">{html.escape(subtitle)}</p>
+<p class="sub"><strong>&asymp; {listening_time(words)}</strong> to read aloud &middot; {words:,} words</p>
 </header>
 <p class="tip">This is the plain-text edition, made because read-aloud would not speak the PDF.
 Use your browser's Read Aloud (Edge: right-click &rarr; Read aloud, or Ctrl+Shift+U) and it will

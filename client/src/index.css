@@ -373,3 +373,7 @@ button { font: inherit; }
 .textbook-error { color: #9c3327; }
 .reading-link.subtle { color: #9a93a0; font-weight: 600; }
 @media (max-width: 900px) { .textbook-main { grid-template-columns: 1fr; grid-template-rows: 44% 1fr; } .textbook-toc { border-right: 0; border-bottom: 1px solid #e6dece; } .textbook-body { padding: 20px 20px 50px; } .textbook-bar h2 { max-width: 46vw; } }
+/* Listening/reading-time labels on long blocks. Muted: useful, never the loudest thing. */
+.block-time { margin-left: 8px; color: #a29b95; font-size: 9.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.doctor-note-toggle .block-time { margin-left: 6px; }
+.ref-time { color: #a29b95; font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }

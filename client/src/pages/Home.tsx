@@ -476,13 +476,13 @@ export default function Home() {
           </div>
           {revealed && (teaching || doctorNote) && <aside className="study-aside">
             {teaching && <div className="teaching-note">
-            <div className="prompt-label teaching-label"><GraduationCap size={16} /> Teaching note</div>
+            <div className="prompt-label teaching-label"><GraduationCap size={16} /> Teaching note<span className="block-time">≈ {formatDuration(estimateSpeechSeconds(teaching.replace(/[#*>|`-]/g, " ")))} read</span></div>
             <Markdown source={teaching} />
             </div>}
             {doctorNote && <div className={`doctor-note ${showDoctorNote ? "is-open" : ""}`}>
             <button className="doctor-note-toggle" onClick={(event) => { event.stopPropagation(); const opening = !showDoctorNote; setShowDoctorNote(opening); if (opening) window.setTimeout(() => event.currentTarget?.scrollIntoView({ behavior: "smooth", block: "start" }), 60); }} aria-expanded={showDoctorNote}>
             <ChevronDown size={15} className="doctor-note-chevron" />
-            <span>Doctors&rsquo; explanation</span>
+            <span>Doctors&rsquo; explanation</span><span className="block-time">≈ {formatDuration(estimateSpeechSeconds(doctorNote.text))} read</span>
             {doctorNote.consensusPct !== null && doctorNote.doctorsN !== null && (
             <span className="doctor-note-stat">{doctorNote.consensusPct}% of {doctorNote.doctorsN.toLocaleString()} doctors chose {doctorNote.key || "the key"}</span>
             )}

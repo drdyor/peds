@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
 import { references } from "@/lib/references";
+import { estimateSpeechSeconds, formatDuration } from "@/lib/speech";
 import Markdown from "./Markdown";
 
 export default function ReferenceReader({ startAt, onClose }: { startAt: number; onClose: () => void }) {
   const [index, setIndex] = useState(startAt);
   const note = references[index];
+  const listen = (body: string) => formatDuration(estimateSpeechSeconds(body.replace(/[#*>|`-]/g, " ")));
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
@@ -21,7 +23,7 @@ export default function ReferenceReader({ startAt, onClose }: { startAt: number;
     <div className="reference-reader" role="dialog" aria-modal="true" aria-label="Reference notes">
       <header className="reference-bar">
         <div>
-          <p className="eyebrow">Reference note</p>
+          <p className="eyebrow">Reference note · ≈ {listen(note.body)} to read aloud</p>
           <h2>{note.title}</h2>
         </div>
         <button onClick={onClose} title="Close (Esc)" aria-label="Close"><X size={18} /></button>
@@ -32,6 +34,7 @@ export default function ReferenceReader({ startAt, onClose }: { startAt: number;
             <button key={item.id} className={i === index ? "active" : ""} onClick={() => setIndex(i)}>
               <strong>{item.title}</strong>
               <span>{item.subtitle}</span>
+              <span className="ref-time">≈ {listen(item.body)}</span>
             </button>
           ))}
         </nav>

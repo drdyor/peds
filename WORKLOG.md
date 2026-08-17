@@ -269,3 +269,9 @@ forks is a log nobody reads.
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify chunked card speech live
 - ran `Get-NetTCPConnection -LocalPort 4190 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Get-Process -Id $_.OwningProcess -ErrorAction Sile…` — Find the leftover local server process
 - ran `Stop-Process -Id 52212 -Force -ErrorAction Stop; Start-Sleep -Milliseconds 400; if (Get-NetTCPConnection -LocalPort 4190 -State Listen -ErrorAction Si…` — Stop the leftover test server
+- edited `speech.ts` — `C:\Users\Forre\peds\client\src\lib\speech.ts`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/components/TextbookReader.tsx" s=open(p…` — Show listening estimates in both readers
+- ran `cd "C:/Users/Forre/peds/dist/public" && python -m http.server 4191 --bind 127.0.0.1` — Serve build with listening times
+- ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_time.js" <<'JS' …` — Verify listening estimates render
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Show how long anything takes to l…` — Commit, push and deploy the timing feature
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify live and confirm push state
