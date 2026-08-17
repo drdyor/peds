@@ -5,7 +5,7 @@ import { flashcards, type Flashcard } from "@/lib/cards";
 import { cardQuestions } from "@/lib/options";
 import { doctorNotes } from "@/lib/explanations";
 import { playCue } from "@/lib/sounds";
-import { speakChunked } from "@/lib/speech";
+import { speakChunked, estimateSpeechSeconds, formatDuration } from "@/lib/speech";
 import { teachingNotes } from "@/lib/teaching";
 import Markdown from "@/components/Markdown";
 import SheetGallery from "@/components/SheetGallery";
@@ -319,6 +319,7 @@ export default function Home() {
   const categoryLabel = card.category ? CATEGORY_LABELS[card.category] ?? card.category.replace(/_/g, " ") : "Core review";
   const answer = answerParts(card, Boolean(question));
   const doctorNote = doctorNotes[card.id];
+  const listenSeconds = estimateSpeechSeconds(speakableAnswer(answer.text), 0.95);
   const teaching = teachingNotes[card.id];
   const completion = Math.round((Object.keys(progress).length / flashcards.length) * 100);
 
@@ -454,7 +455,7 @@ export default function Home() {
             <div className="card-body" ref={cardBodyRef}>
               <div className="prompt-label"><CircleHelp size={16} /> Prompt</div>
               <p className={`card-question ${splitEnumerated(card.front).items.length ? "has-enum" : ""}`}><EnumeratedText text={card.front} /></p>
-              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue{speechSupported && <button className={`speak-button ${speaking ? "is-speaking" : ""}`} onClick={(event) => { event.stopPropagation(); speaking ? stopSpeaking() : speakAnswer(answer.text); }} aria-label={speaking ? "Stop reading the answer" : "Read the answer aloud"} title={speaking ? "Stop" : "Read the answer aloud"}>{speaking ? <Square size={13} /> : <Play size={13} />}<span>{speaking ? "Stop" : "Listen"}</span></button>}</div><p>{answer.text}{answer.notes.length > 0 && <sup className="verify-mark" title={answer.notes.join(" ")}>*</sup>}</p></div>{question && <div className="option-table">
+              {!revealed ? <div className="reveal-prompt"><span className="reveal-icon"><Star size={14} /></span><span>Tap to reveal answer</span><span className="keycap">SPACE</span></div> : <><div className="answer-block"><div className="prompt-label answer-label"><Check size={16} /> Answer & memory cue{speechSupported && <button className={`speak-button ${speaking ? "is-speaking" : ""}`} onClick={(event) => { event.stopPropagation(); speaking ? stopSpeaking() : speakAnswer(answer.text); }} aria-label={speaking ? "Stop reading the answer" : "Read the answer aloud"} title={speaking ? "Stop" : "Read the answer aloud"}>{speaking ? <Square size={13} /> : <Play size={13} />}<span>{speaking ? "Stop" : `Listen · ${formatDuration(listenSeconds)}`}</span></button>}</div><p>{answer.text}{answer.notes.length > 0 && <sup className="verify-mark" title={answer.notes.join(" ")}>*</sup>}</p></div>{question && <div className="option-table">
                 <div className="prompt-label option-table-label"><ListChecks size={16} /> {question.keyed === null ? "All five options — legacy key withdrawn, nothing highlighted" : question.negative ? "Every option — the excluded one is the answer" : "Every option, as printed on the exam paper"}</div>
                 {question.options.map((option) => {
                   const isKeyed = option.letter === question.keyed;

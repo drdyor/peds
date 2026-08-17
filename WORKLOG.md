@@ -254,3 +254,18 @@ forks is a log nobody reads.
 - ran `sleep 2; S="C:/Users/Forre/AppData/Local/Temp/claude/C--Users-Forre/b39aa80b-f890-4435-a267-acf8e8ad1252/scratchpad"; cat > "$S/check_html.js" <<'JS' …` — Verify HTML editions expose readable text
 - ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Plain HTML editions of both PDFs,…` — Commit and deploy HTML editions
 - ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; for f in textbook.html high-yield-2026.html lek-last-minute-pediatria.pdf pediatrics-high-yield…` — Verify HTML editions live
+- ran `cd "C:/Users/Forre/peds" && echo "=== branch / remote ==="; git status -sb | head -3; echo "=== unpushed commits ==="; git log --oneline origin/main..…` — Check push status against GitHub
+- ran `cd "C:/Users/Forre/peds" && echo "=== 1. unchunked speech: every place we call speak() ==="; grep -rn "speechSynthesis.speak\|new SpeechSynthesisUtter…` — Audit for the same truncation bug elsewhere
+- wrote `speech.ts` — `C:\Users\Forre\peds\client\src\lib\speech.ts`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys,re sys.stdout.reconfigure(encoding="utf-8") p=r"client/src/pages/Home.tsx" s=open(p,encoding="u…` — Route both readers through shared chunking
+- edited `build_textbook.py` — `C:\Users\Forre\peds\tools\build_textbook.py`
+- ran `cd "C:/Users/Forre/peds" && python - <<'PY' import sys sys.stdout.reconfigure(encoding="utf-8") p=r"tools\build_textbook.py" s=open(p,encoding="utf-8"…` — Rebuild textbook JSON with measured sizes
+- ran `cd "C:/Users/Forre/peds" && npx vite build 2>&1|grep -E "built in|error"; cd dist/public && (python -m http.server 4190 --bind 127.0.0.1 &) ; sleep 3;…` — Verify card 5 now speaks in full
+- ran `cd "C:/Users/Forre/peds" && git add -A && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" commit -q -m "Fix the same truncation bug in th…` — Commit the bug fixes
+- ran `cd "C:/Users/Forre/peds" && git -c user.name="Eva Dyor" -c user.email="drdyor@gmail.com" merge origin/main --no-edit 2>&1 | tail -8; echo "=== status …` — Merge the Manus commit before pushing
+- ran `cd "C:/Users/Forre/peds" && timeout 180 git push origin main 2>&1 | tail -12` — Push to GitHub
+- ran `cd "C:/Users/Forre/peds" && git status -sb | head -2; echo "=== remote now has ==="; curl -s "https://api.github.com/repos/drdyor/peds/commits?per_pag…` — Verify the push landed on GitHub
+- ran `cd "C:/Users/Forre/peds" && vercel deploy --prod --cwd "C:/Users/Forre/peds" --yes 2>&1 | grep -E "Production|Error" | head -2` — Deploy the bug fix to production
+- ran `sleep 6; U="https://peds-drdyors-projects.vercel.app"; curl -s -o /dev/null -w "site: %{http_code}\n" $U/; S="C:/Users/Forre/AppData/Local/Temp/claude…` — Verify chunked card speech live
+- ran `Get-NetTCPConnection -LocalPort 4190 -State Listen -ErrorAction SilentlyContinue | ForEach-Object { Get-Process -Id $_.OwningProcess -ErrorAction Sile…` — Find the leftover local server process
+- ran `Stop-Process -Id 52212 -Force -ErrorAction Stop; Start-Sleep -Milliseconds 400; if (Get-NetTCPConnection -LocalPort 4190 -State Listen -ErrorAction Si…` — Stop the leftover test server

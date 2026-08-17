@@ -24,6 +24,31 @@ export function chunkForSpeech(text: string, max = 220): string[] {
   return out.filter(Boolean);
 }
 
+// Listening-time estimate.
+//
+// Characters are the wrong unit on their own - "immunodeficiency" and "is a" have wildly
+// different character counts per unit of speaking time - so this counts WORDS and converts.
+// 150 wpm is the usual figure quoted for synthesised speech at normal rate; the app speaks at
+// `rate`, which scales it. It is an estimate and the UI says so: real duration varies with the
+// installed voice, and abbreviations spoken letter by letter (PPNAD, KCNJ11) run slower.
+const WORDS_PER_MINUTE = 150;
+
+export function estimateSpeechSeconds(text: string, rate = 0.95): number {
+  const words = text.trim().split(/\s+/).filter(Boolean).length;
+  if (!words) return 0;
+  return Math.round((words / (WORDS_PER_MINUTE * rate)) * 60);
+}
+
+/** "45 sec", "2 min", "1 hr 12 min" — short enough to sit in a header. */
+export function formatDuration(seconds: number): string {
+  if (seconds < 60) return `${Math.max(1, Math.round(seconds))} sec`;
+  const minutes = Math.round(seconds / 60);
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const rest = minutes % 60;
+  return rest ? `${hours} hr ${rest} min` : `${hours} hr`;
+}
+
 export function pickVoice(): SpeechSynthesisVoice | null {
   if (typeof window === "undefined" || !("speechSynthesis" in window)) return null;
   const voices = window.speechSynthesis.getVoices();

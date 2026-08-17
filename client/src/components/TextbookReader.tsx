@@ -9,7 +9,7 @@
 // read-aloud works on it too.
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Loader2, Pause, Play, Search, SkipForward, X } from "lucide-react";
-import { chunkForSpeech, pickVoice } from "@/lib/speech";
+import { chunkForSpeech, estimateSpeechSeconds, formatDuration, pickVoice } from "@/lib/speech";
 
 type Section = { level: number; title: string; page: number; paragraphs: string[] };
 type Book = { title: string; note: string; pages: number; sections: Section[] };
@@ -54,6 +54,16 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
 
   const section = book?.sections[index];
 
+  const sectionText = section ? [section.title, ...section.paragraphs].join(". ") : "";
+  const sectionSeconds = estimateSpeechSeconds(sectionText, 0.98);
+  // Everything from here to the end of the book, for the "Read on" mode.
+  const remainingSeconds = useMemo(() => {
+    if (!book) return 0;
+    return book.sections
+      .slice(index)
+      .reduce((total, s) => total + estimateSpeechSeconds([s.title, ...s.paragraphs].join(". "), 0.98), 0);
+  }, [book, index]);
+
   function stop() {
     if (speechSupported) window.speechSynthesis.cancel();
     setSpeaking(false);
@@ -92,7 +102,7 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
     <div className="textbook" role="dialog" aria-modal="true" aria-label="Textbook reader">
       <header className="textbook-bar">
         <div>
-          <p className="eyebrow">LEK Last Minute — Pediatria{book ? ` · ${book.sections.length} sections` : ""}</p>
+          <p className="eyebrow">LEK Last Minute — Pediatria{book ? ` · ${book.sections.length} sections` : ""}{section ? ` · ≈ ${formatDuration(sectionSeconds)} to listen · ${formatDuration(remainingSeconds)} left in the book` : ""}</p>
           <h2>{section ? section.title : "Loading…"}</h2>
         </div>
         <div className="textbook-actions">
@@ -100,7 +110,7 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
             <>
               <button onClick={() => (speaking ? stop() : speakSection(section, false))} title={speaking ? "Stop" : "Read this section aloud"}>
                 {speaking ? <Pause size={16} /> : <Play size={16} />}
-                <span>{speaking ? "Stop" : "Listen"}</span>
+                <span>{speaking ? "Stop" : `Listen · ${formatDuration(sectionSeconds)}`}</span>
               </button>
               <button
                 className={continuous ? "on" : ""}
@@ -112,7 +122,7 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
                 title="Keep reading into the following sections"
               >
                 <SkipForward size={16} />
-                <span>Read on</span>
+                <span>Read on · {formatDuration(remainingSeconds)}</span>
               </button>
             </>
           )}
@@ -131,7 +141,7 @@ export default function TextbookReader({ onClose }: { onClose: () => void }) {
             {book && matches.slice(0, 400).map((i) => (
               <button key={i} className={`toc-item lvl${book.sections[i].level} ${i === index ? "active" : ""}`} onClick={() => { setIndex(i); if (continuous) stop(); }}>
                 {book.sections[i].title}
-                <small>p.{book.sections[i].page}</small>
+                <small>{formatDuration(estimateSpeechSeconds([book.sections[i].title, ...book.sections[i].paragraphs].join(". "), 0.98))} · p.{book.sections[i].page}</small>
               </button>
             ))}
             {book && matches.length > 400 && <p className="textbook-count">Showing the first 400 — narrow the search to see the rest.</p>}
